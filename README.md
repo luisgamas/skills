@@ -64,3 +64,21 @@ These skills were built with a few strong principles in mind:
 - The architecture and conventions reflect my own standards rather than a generic or framework-neutral style.
 - The repository is organized for maintainability and direct reuse in Codex-compatible skill environments.
 
+## GitHub Repository Metadata
+
+Use the following values in the GitHub repository settings to make the project easier to find and understand:
+
+- Description: `Custom Codex skills for Flutter, Riverpod, Material 3, and Odoo, structured from real-world project patterns.`
+- Website: leave empty unless you publish a separate docs site.
+- Topics:
+  - `codex`
+  - `skills`
+  - `flutter`
+  - `riverpod`
+  - `material-design-3`
+  - `odoo`
+  - `ai`
+  - `developer-tools`
+  - `open-source`
+
+These topics are intentionally broad enough to describe the repository without exposing private project details.
