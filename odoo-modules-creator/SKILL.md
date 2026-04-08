@@ -1,6 +1,12 @@
 ---
 name: odoo-modules-creator
-description: Create, extend, scaffold, or review Odoo 18 addons using the official ORM, XML views, manifest files, access control, controllers, wizards, reports, and modular extension patterns. Use when building a new Odoo module, inheriting existing models or views, defining business logic and security, wiring menus and actions, or validating whether an addon follows safe and installable Odoo 18 conventions.
+description: >-
+  Create, extend, scaffold, or review Odoo 18 addons using the official ORM,
+  XML views, manifest files, access control, controllers, wizards, reports, and
+  modular extension patterns. Use when building a new Odoo module, inheriting
+  existing models or views, defining business logic and security, wiring menus
+  and actions, or validating whether an addon follows safe and installable Odoo
+  18 conventions.
 ---
 
 # Odoo Modules Creator

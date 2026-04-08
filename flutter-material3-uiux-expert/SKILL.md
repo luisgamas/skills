@@ -1,6 +1,13 @@
 ---
 name: flutter-material3-uiux-expert
-description: Design, implement, migrate, or review Flutter interfaces using Material Design 3 in the style shown by this repository's real Flutter projects: centralized design tokens, expressive surfaces, selective glassmorphism, shared widgets, semantic colors, and practical responsive behavior that matches the actual screen. Use when building screens, widgets, themes, responsive layouts, or auditing UI code for consistency with this personal Material 3 workflow.
+description: >-
+  Design, implement, migrate, or review Flutter interfaces using Material
+  Design 3 in the style shown by this repository's real Flutter projects:
+  centralized design tokens, expressive surfaces, selective glassmorphism,
+  shared widgets, semantic colors, and practical responsive behavior that
+  matches the actual screen. Use when building screens, widgets, themes,
+  responsive layouts, or auditing UI code for consistency with this personal
+  Material 3 workflow.
 ---
 
 # Flutter Material 3 UI/UX Expert

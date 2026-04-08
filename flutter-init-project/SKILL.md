@@ -1,6 +1,14 @@
 ---
 name: flutter-init-project
-description: Initialize or reset a Flutter project into a production-ready baseline aligned with this repository's real Flutter projects: manual Riverpod setup, GoRouter routing, Material 3 configuration, shared services, shared widgets, design tokens, and either modular `lib/modules/` scaffolding or a simpler root-level `domain/infrastructure/presentation` structure when the app does not need feature modules. Use when bootstrapping a new project, replacing the default counter app, or standardizing an app foundation before feature development.
+description: >-
+  Initialize or reset a Flutter project into a production-ready baseline
+  aligned with this repository's real Flutter projects: manual Riverpod setup,
+  GoRouter routing, Material 3 configuration, shared services, shared widgets,
+  design tokens, and either modular `lib/modules/` scaffolding or a simpler
+  root-level `domain/infrastructure/presentation` structure when the app does
+  not need feature modules. Use when bootstrapping a new project, replacing the
+  default counter app, or standardizing an app foundation before feature
+  development.
 ---
 
 # Flutter Init Project

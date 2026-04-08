@@ -1,6 +1,14 @@
 ---
 name: flutter-clean-arch-architect
-description: Design, scaffold, refactor, or audit Flutter code using a Clean Architecture aligned with this repository's real project style: `domain`, `infrastructure`, and `presentation` layers for modular features, manual Riverpod dependency injection, explicit datasource and repository contracts, optional local and remote repositories, Isar-friendly entities, and no `usecase` layer. Use when creating a new module, restructuring an existing feature, wiring datasources/repositories/providers, shaping shared services, or reviewing architectural boundaries in a Flutter codebase.
+description: >-
+  Design, scaffold, refactor, or audit Flutter code using a Clean Architecture
+  aligned with this repository's real project style: `domain`,
+  `infrastructure`, and `presentation` layers for modular features, manual
+  Riverpod dependency injection, explicit datasource and repository contracts,
+  optional local and remote repositories, Isar-friendly entities, and no
+  `usecase` layer. Use when creating a new module, restructuring an existing
+  feature, wiring datasources/repositories/providers, shaping shared services,
+  or reviewing architectural boundaries in a Flutter codebase.
 ---
 
 # Flutter Clean Architecture Architect

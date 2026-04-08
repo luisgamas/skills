@@ -1,6 +1,14 @@
 ---
 name: flutter-riverpod-expert
-description: Design, implement, refactor, migrate, or review Flutter state management with Riverpod using the manual provider patterns shown in this repository's real Flutter projects: explicit datasource and repository providers, split state and operation providers, auth stream listeners, GoRouter bridge providers, family providers where they genuinely help, and local or remote repositories that can remain independent. Use when creating providers and notifiers, modernizing state structure, wiring auth/router interaction, optimizing rebuilds, or aligning code with this repository's personal Flutter workflow.
+description: >-
+  Design, implement, refactor, migrate, or review Flutter state management with
+  Riverpod using the manual provider patterns shown in this repository's real
+  Flutter projects: explicit datasource and repository providers, split state
+  and operation providers, auth stream listeners, GoRouter bridge providers,
+  family providers where they genuinely help, and local or remote repositories
+  that can remain independent. Use when creating providers and notifiers,
+  modernizing state structure, wiring auth/router interaction, optimizing
+  rebuilds, or aligning code with this repository's personal Flutter workflow.
 ---
 
 # Flutter Riverpod Expert
