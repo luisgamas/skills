@@ -1,0 +1,4 @@
+.opencode/
+.claude/
+.agents/
+node_modules/
