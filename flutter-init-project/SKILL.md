@@ -32,12 +32,12 @@ Turn a raw Flutter app into a repeatable project foundation that is aligned with
 
 Read these reference files before editing project files:
 
-1. [`references/core/workflow.md`](references/core/workflow.md)
-   Use for the ordered initialization procedure.
-2. [`references/core/rules.md`](references/core/rules.md)
+1. [`references/core/rules.md`](references/core/rules.md)
    Use for architectural constraints, dependency limits, and cleanup rules.
-3. [`references/core/specs.md`](references/core/specs.md)
+2. [`references/core/specs.md`](references/core/specs.md)
    Use for the target directory tree and design-token schema.
+3. [`references/examples/before-after.md`](references/examples/before-after.md)
+   Use to see the expected transformation from default Flutter project to initialized baseline.
 
 Use these template assets as the canonical bootstrap base:
 
@@ -50,20 +50,37 @@ Use these template assets as the canonical bootstrap base:
 
 ## Operating Procedure
 
-1. Verify project context.
-   Confirm the workspace is the root of a Flutter application and inspect the current `pubspec.yaml`.
-2. Normalize dependencies.
-   Apply the baseline dependency set from [`assets/bootstrap-template/pubspec.yaml`](assets/bootstrap-template/pubspec.yaml).
-3. Remove starter boilerplate.
-   Replace the default counter app and remove or rewrite the default widget test as appropriate.
-4. Scaffold the project structure.
-   Create the folders and foundational files from [`references/core/specs.md`](references/core/specs.md).
-5. Generate configuration.
-   Create design tokens, theme setup, router setup, and the `lib/config/config.dart` barrel.
-6. Rebuild the app entry point.
-   Keep `main.dart` focused on framework bootstrap, `ProviderScope`, and `MaterialApp.router`.
-7. Validate the baseline.
-   Run project validation such as `flutter analyze` when the environment permits.
+### 1. Environment Verification
+- Confirm you are at the root of a Flutter project.
+- Check the current `pubspec.yaml` state.
+
+### 2. Normalize Dependencies
+- Apply the baseline dependency set from [`assets/bootstrap-template/pubspec.yaml`](assets/bootstrap-template/pubspec.yaml).
+- Run `flutter pub get` immediately to sync the project.
+
+### 3. Remove Starter Boilerplate
+- Delete `lib/main.dart` content.
+- Delete `test/widget_test.dart` (or refactor it if it's strictly required).
+
+### 4. Scaffold the Project Structure
+- Create the folder structure as defined in [`references/core/specs.md`](references/core/specs.md).
+- Choose the structure intentionally:
+  - modular apps: `lib/modules/<feature_name>/...`
+  - simpler apps: root `lib/domain`, `lib/infrastructure`, `lib/presentation`
+
+### 5. Generate Configuration
+- **Design Tokens**: Generate `lib/config/theme/app_config.dart` (refer to [`assets/bootstrap-template/lib/config/theme/app_config.dart`](assets/bootstrap-template/lib/config/theme/app_config.dart)).
+- **App Theme**: Generate `lib/config/theme/app_theme.dart` (refer to [`assets/bootstrap-template/lib/config/theme/app_theme.dart`](assets/bootstrap-template/lib/config/theme/app_theme.dart)).
+- **App Router**: Generate `lib/config/router/app_router.dart` (refer to [`assets/bootstrap-template/lib/config/router/app_router.dart`](assets/bootstrap-template/lib/config/router/app_router.dart)).
+- **Router Bridge**: If auth-driven redirects are needed, add a dedicated router notifier/provider instead of pushing redirect logic into widgets.
+- **Barrel Files**: Create `lib/config/config.dart` to export the theme and router modules.
+
+### 6. Rebuild the App Entry Point
+- Generate the new `lib/main.dart` connecting `ProviderScope` and `MaterialApp.router` (refer to [`assets/bootstrap-template/lib/main.dart`](assets/bootstrap-template/lib/main.dart)).
+
+### 7. Validate the Baseline
+- Run `flutter analyze` to ensure no syntax or import errors exist.
+- Verify that basic routing (initial location) is functional.
 
 ## Non-Negotiable Rules
 

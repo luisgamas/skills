@@ -26,12 +26,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     NavigationDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: 'Profile'),
   ];
 
-  static const _railDestinations = [
-    NavigationRailDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: Text('Home')),
-    NavigationRailDestination(icon: Icon(Icons.explore_outlined), selectedIcon: Icon(Icons.explore), label: Text('Explore')),
-    NavigationRailDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: Text('Profile')),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final colors     = Theme.of(context).colorScheme;
@@ -61,13 +55,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 NavigationRail(
                   selectedIndex: _selectedIndex,
                   onDestinationSelected: (i) => setState(() => _selectedIndex = i),
-                  destinations: _railDestinations,
                   labelType: NavigationRailLabelType.all,
+                  destinations: const [
+                    NavigationRailDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: Text('Home')),
+                    NavigationRailDestination(icon: Icon(Icons.explore_outlined), selectedIcon: Icon(Icons.explore), label: Text('Explore')),
+                    NavigationRailDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: Text('Profile')),
+                  ],
                 ),
                 const VerticalDivider(width: 1),
-                Expanded(
-                  child: _Body(selectedIndex: _selectedIndex, colors: colors, textStyles: textStyles),
-                ),
+                Expanded(child: _Body(selectedIndex: _selectedIndex, colors: colors, textStyles: textStyles)),
               ],
             ),
           );
@@ -87,9 +83,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: Text('Dashboard', style: textStyles.titleMedium),
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  NavigationDrawerDestination(icon: const Icon(Icons.home_outlined), label: const Text('Home')),
-                  NavigationDrawerDestination(icon: const Icon(Icons.explore_outlined), label: const Text('Explore')),
-                  NavigationDrawerDestination(icon: const Icon(Icons.person_outline), label: const Text('Profile')),
+                  ...['Home', 'Explore', 'Profile'].map((label) =>
+                    NavigationDrawerDestination(icon: Icon(Icons.home_outlined), label: Text(label)),
+                  ),
                 ],
               ),
               const VerticalDivider(width: 1),
@@ -97,9 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Column(
                   children: [
                     AppBar(title: const Text('Dashboard'), scrolledUnderElevation: 3),
-                    Expanded(
-                      child: _Body(selectedIndex: _selectedIndex, colors: colors, textStyles: textStyles),
-                    ),
+                    Expanded(child: _Body(selectedIndex: _selectedIndex, colors: colors, textStyles: textStyles)),
                   ],
                 ),
               ),
@@ -204,9 +198,6 @@ class _StatCard extends StatelessWidget {
   }
 }
 ```
-
-**Tokens applied**: `AppSpacing`, `AppBreakpoints`, `AppIconSizes`, `colors.*`, `textStyles.*`
-**Patterns**: `LayoutBuilder` + three-tier navigation, `ConstrainedBox` on content, `Card.filled`, `CarouselView`, `Divider`, `Column(spacing:)`.
 
 ---
 

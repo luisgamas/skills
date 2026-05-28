@@ -98,26 +98,156 @@ Use this only for framework interoperability such as `GoRouter.refreshListenable
 
 ## 6. Testing (Riverpod 3.0)
 
-### Provider Container
-Always use `ProviderContainer.test()` for unit tests to ensure proper disposal.
+### Unit Tests — ProviderContainer.test()
+
+Always use `ProviderContainer.test()` for unit tests. It handles disposal automatically at the end of the test.
+
+```dart
+test('fetches products from repository', () async {
+  final container = ProviderContainer.test(
+    overrides: [
+      productRepositoryProvider.overrideWithValue(MockProductRepository()),
+    ],
+  );
+
+  final repo = container.read(productRepositoryProvider);
+  expect(repo, isA<MockProductRepository>());
+
+  final products = await container.read(productListProvider.future);
+  expect(products, isNotEmpty);
+});
+```
+
+### Testing AsyncNotifier State Transitions
+
+Verify the full lifecycle: `AsyncLoading` → `AsyncData` or `AsyncError`.
+
+```dart
+test('notifier transitions from loading to data', () async {
+  final container = ProviderContainer.test(
+    overrides: [
+      productRepositoryProvider.overrideWithValue(MockProductRepository()),
+    ],
+  );
+
+  final states = <AsyncValue<List<ProductEntity>>>[];
+  container.listen(
+    productNotifierProvider,
+    (prev, next) => states.add(next),
+    fireImmediately: true,
+  );
+
+  await container.read(productNotifierProvider.future);
+
+  expect(states.first, isA<AsyncLoading<List<ProductEntity>>>());
+  expect(states.last, isA<AsyncData<List<ProductEntity>>>());
+});
+```
+
+### Testing Notifier Mutations
+
+```dart
+test('deleteProduct removes item from state', () async {
+  final container = ProviderContainer.test(
+    overrides: [
+      productRepositoryProvider.overrideWithValue(MockProductRepository()),
+    ],
+  );
+
+  await container.read(productNotifierProvider.future);
+  await container.read(productNotifierProvider.notifier).deleteProduct('id-1');
+
+  final result = container.read(productNotifierProvider).requireValue;
+  expect(result.any((p) => p.id == 'id-1'), isFalse);
+});
+```
+
+### Testing Error States
+
+```dart
+test('notifier surfaces repository errors as AsyncError', () async {
+  final container = ProviderContainer.test(
+    overrides: [
+      productRepositoryProvider.overrideWithValue(FailingProductRepository()),
+    ],
+  );
+
+  final states = <AsyncValue<List<ProductEntity>>>[];
+  container.listen(
+    productNotifierProvider,
+    (prev, next) => states.add(next),
+    fireImmediately: true,
+  );
+
+  await expectLater(
+    container.read(productNotifierProvider.future),
+    throwsA(isA<Exception>()),
+  );
+
+  expect(states.last, isA<AsyncError<List<ProductEntity>>>());
+});
+```
+
+### Partial Notifier Overrides — overrideWithBuild
+
+Mock only the initialization (build) while keeping the original mutation methods intact for integration-style tests.
 
 ```dart
 final container = ProviderContainer.test(
   overrides: [
-    repoProvider.overrideWithValue(MockRepo()),
+    productNotifierProvider.overrideWithBuild(
+      (ref, notifier) => [ProductEntity(id: '1', name: 'Mocked')],
+    ),
   ],
 );
+
+// notifier.deleteProduct() still runs real logic against the mocked initial state
+await container.read(productNotifierProvider.notifier).deleteProduct('1');
 ```
 
-### Partial Notifier Overrides
-Use `overrideWithBuild` to only mock the initialization while keeping the original mutation methods for testing.
+### Widget Tests
 
 ```dart
-counterProvider.overrideWithBuild((ref) => 42); // Initial state mocked
+testWidgets('shows product list', (tester) async {
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [
+        productRepositoryProvider.overrideWithValue(MockProductRepository()),
+      ],
+      child: const MaterialApp(home: ProductsScreen()),
+    ),
+  );
+
+  await tester.pumpAndSettle();
+  expect(find.text('Product 1'), findsOneWidget);
+});
 ```
 
-### Widget Test Access
-Access the container directly from the tester:
+Access the container directly when needed:
+
 ```dart
 final container = tester.container;
 ```
+
+### Mock Repository Pattern
+
+Use abstract repository classes from the domain layer as the mock contract:
+
+```dart
+class MockProductRepository implements ProductRepository {
+  @override
+  Future<List<ProductEntity>> fetchAll() async => [
+    ProductEntity(id: '1', name: 'Product 1', price: 99.0),
+  ];
+
+  @override
+  Future<void> delete(String id) async {}
+}
+
+class FailingProductRepository implements ProductRepository {
+  @override
+  Future<List<ProductEntity>> fetchAll() async => throw Exception('Network error');
+
+  @override
+  Future<void> delete(String id) async => throw Exception('Network error');
+}

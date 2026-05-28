@@ -1,6 +1,6 @@
 # Few-Shot Examples — Odoo 18 Module Creator
 
-Two complete, diverse examples demonstrating core patterns.
+Two complete examples demonstrating core patterns.
 
 ---
 
@@ -22,7 +22,6 @@ Two complete, diverse examples demonstrating core patterns.
     "data": [
         "security/ir.model.access.csv",
         "views/library_book_view.xml",
-        "views/menu.xml",
     ],
     "installable": True,
     "application": True,
@@ -148,54 +147,24 @@ access_library_book_manager,library.book manager,model_library_book,base.group_s
                 <field name="title"/>
                 <field name="author"/>
                 <field name="isbn"/>
-                <field name="date_published"/>
                 <field name="available"/>
             </list>
         </field>
     </record>
 
-    <!-- Search View -->
-    <record id="view_library_book_search" model="ir.ui.view">
-        <field name="name">library.book.search</field>
-        <field name="model">library.book</field>
-        <field name="arch" type="xml">
-            <search string="Book">
-                <field name="title"/>
-                <field name="author"/>
-                <field name="isbn"/>
-                <filter string="Available" name="available"
-                        domain="[('available', '=', True)]"/>
-                <filter string="Borrowed" name="borrowed"
-                        domain="[('available', '=', False)]"/>
-                <group expand="0" string="Group By">
-                    <filter string="Author" name="group_author"
-                            context="{'group_by': 'author'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-
-    <!-- Window Action -->
+    <!-- Action + Menu -->
     <record id="action_library_book" model="ir.actions.act_window">
         <field name="name">Books</field>
         <field name="res_model">library.book</field>
         <field name="view_mode">list,form</field>
-        <field name="context">{'search_default_available': 1}</field>
     </record>
 
-</odoo>
-```
-
-### File: `views/menu.xml`
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
     <menuitem id="menu_library_root" name="Library" sequence="50"/>
     <menuitem id="menu_library_books" name="Books"
               parent="menu_library_root"
               action="action_library_book"
               sequence="10"/>
+
 </odoo>
 ```
 
@@ -217,7 +186,6 @@ access_library_book_manager,library.book manager,model_library_book,base.group_s
     "license": "LGPL-3",
     "depends": ["base", "contacts"],
     "data": [
-        "security/ir.model.access.csv",
         "views/res_partner_view.xml",
     ],
     "installable": True,
@@ -245,7 +213,6 @@ from odoo import models, fields
 
 class ResPartner(models.Model):
     _inherit = "res.partner"
-    # No _name — pure extension of existing model
 
     preferred_delivery_method = fields.Selection(
         [
@@ -269,29 +236,17 @@ class ResPartner(models.Model):
     membership_since = fields.Date(string="Member Since")
 ```
 
-### File: `security/ir.model.access.csv`
-
-```csv
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-```
-
-> Note: `res.partner` already has access rules in the `base` module.
-> Only add entries here if you create entirely NEW models. For pure `_inherit` extensions, this file can be empty (but must still exist and be listed in manifest).
-
 ### File: `views/res_partner_view.xml`
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Inherit and extend the existing res.partner form view -->
     <record id="view_res_partner_form_extension" model="ir.ui.view">
         <field name="name">res.partner.form.extension</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-
-            <!-- Add a new page to the existing notebook -->
             <notebook position="inside">
                 <page string="Membership &amp; Delivery" name="membership_delivery">
                     <group>
@@ -306,14 +261,10 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
                     </group>
                 </page>
             </notebook>
-
         </field>
     </record>
 
 </odoo>
 ```
 
-> Key pattern for view inheritance:
-> - Use `<field name="inherit_id" ref="base.view_partner_form"/>` to target the parent view.
-> - Use XPath positional attributes: `position="inside"`, `position="after"`, `position="before"`, `position="replace"`, `position="attributes"`.
-> - Target existing elements using their `name` attribute or an XPath expression.
+> **View inheritance pattern**: Use `<field name="inherit_id" ref="module.view_id"/>` to target the parent view. Use XPath positional attributes: `position="inside"`, `position="after"`, `position="before"`, `position="replace"`, `position="attributes"`.
