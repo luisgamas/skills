@@ -44,6 +44,8 @@ Read these reference files before generating an addon:
    Use for security rules, anti-patterns, deprecated patterns, SQL safety, and hallucination prevention.
 4. [`references/examples/few-shot-examples.md`](references/examples/few-shot-examples.md)
    Use for end-to-end examples of a new module and a pure `_inherit` extension.
+5. [`references/examples/reports-qweb.md`](references/examples/reports-qweb.md)
+   Use for QWeb PDF report patterns, directives, and template structure.
 
 Use this script for structure checks when auditing a generated addon:
 

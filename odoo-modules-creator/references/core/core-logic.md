@@ -51,6 +51,7 @@ Generate files in this order:
 
 **Step 8 — Reports (if needed):**
 1. `report/model_name_report.xml`
+   See [`references/examples/reports-qweb.md`](../examples/reports-qweb.md) for QWeb patterns.
 
 ---
 
@@ -154,10 +155,9 @@ class EstateProperty(models.Model):
     _description = "Real Estate Property"
     _order = "name"
 
-    # --- Fields ---
+    # --- Basic Fields ---
     name = fields.Char(string="Name", required=True)
     description = fields.Text(string="Description")
-    postcode = fields.Char(string="Postcode")
     date_availability = fields.Date(
         string="Available From",
         default=fields.Date.add(fields.Date.today(), months=3),
@@ -165,17 +165,9 @@ class EstateProperty(models.Model):
     )
     expected_price = fields.Float(string="Expected Price", required=True)
     selling_price = fields.Float(string="Selling Price", readonly=True, copy=False)
-    bedrooms = fields.Integer(string="Bedrooms", default=2)
     living_area = fields.Integer(string="Living Area (sqm)")
-    facades = fields.Integer(string="Facades")
-    garage = fields.Boolean(string="Garage")
     garden = fields.Boolean(string="Garden")
     garden_area = fields.Integer(string="Garden Area (sqm)")
-    garden_orientation = fields.Selection(
-        [("north", "North"), ("south", "South"), ("east", "East"), ("west", "West")],
-        string="Garden Orientation",
-    )
-    active = fields.Boolean(string="Active", default=True)
     state = fields.Selection(
         [
             ("new", "New"),
@@ -190,16 +182,13 @@ class EstateProperty(models.Model):
         copy=False,
     )
 
-    # Relational fields
+    # --- Relational Fields ---
     partner_id = fields.Many2one("res.partner", string="Buyer", copy=False)
-    user_id = fields.Many2one(
-        "res.users", string="Salesperson", default=lambda self: self.env.user
-    )
     property_type_id = fields.Many2one("estate.property.type", string="Property Type")
     offer_ids = fields.One2many("estate.property.offer", "property_id", string="Offers")
     tag_ids = fields.Many2many("estate.property.tag", string="Tags")
 
-    # Computed fields
+    # --- Computed Fields ---
     total_area = fields.Integer(
         string="Total Area (sqm)", compute="_compute_total_area"
     )
@@ -235,12 +224,7 @@ class EstateProperty(models.Model):
     # --- Onchange ---
     @api.onchange("garden")
     def _onchange_garden(self):
-        if self.garden:
-            self.garden_area = 10
-            self.garden_orientation = "north"
-        else:
-            self.garden_area = 0
-            self.garden_orientation = False
+        self.garden_area = 10 if self.garden else 0
 
     # --- Validation ---
     @api.constrains("selling_price", "expected_price")
@@ -325,7 +309,6 @@ Column rules:
                         <field name="name"/>
                         <field name="property_type_id"/>
                         <field name="tag_ids" widget="many2many_tags"/>
-                        <field name="postcode"/>
                         <field name="date_availability"/>
                     </group>
                     <group>
@@ -338,13 +321,9 @@ Column rules:
                     <page string="Description">
                         <group>
                             <field name="description"/>
-                            <field name="bedrooms"/>
                             <field name="living_area"/>
-                            <field name="facades"/>
-                            <field name="garage"/>
                             <field name="garden"/>
                             <field name="garden_area" attrs="{'invisible': [('garden', '=', False)]}"/>
-                            <field name="garden_orientation" attrs="{'invisible': [('garden', '=', False)]}"/>
                             <field name="total_area"/>
                         </group>
                     </page>
@@ -353,7 +332,6 @@ Column rules:
                     </page>
                     <page string="Other Info">
                         <group>
-                            <field name="user_id"/>
                             <field name="partner_id"/>
                         </group>
                     </page>
@@ -376,8 +354,7 @@ Column rules:
               decoration-muted="state == 'sold'">
             <field name="name"/>
             <field name="property_type_id"/>
-            <field name="postcode"/>
-            <field name="bedrooms"/>
+            <field name="tag_ids" widget="many2many_tags"/>
             <field name="living_area"/>
             <field name="expected_price"/>
             <field name="selling_price"/>
@@ -397,14 +374,12 @@ Column rules:
     <field name="arch" type="xml">
         <search string="Property">
             <field name="name"/>
-            <field name="postcode"/>
+            <field name="property_type_id"/>
             <filter string="Available" name="available"
                     domain="[('state', 'in', ['new', 'offer_received'])]"/>
             <group expand="0" string="Group By">
                 <filter string="Property Type" name="group_property_type"
                         context="{'group_by': 'property_type_id'}"/>
-                <filter string="Postcode" name="group_postcode"
-                        context="{'group_by': 'postcode'}"/>
             </group>
         </search>
     </field>
@@ -491,40 +466,6 @@ class EstateController(http.Controller):
 
 ---
 
-## Reports — QWeb PDF
-
-```xml
-<!-- report/estate_property_report.xml -->
-
-<!-- Report action -->
-<record id="action_report_estate_property" model="ir.actions.report">
-    <field name="name">Property Summary</field>
-    <field name="model">estate.property</field>
-    <field name="report_type">qweb-pdf</field>
-    <field name="report_name">estate_management.report_estate_property_document</field>
-    <field name="report_file">estate_management.report_estate_property_document</field>
-    <field name="binding_model_id" ref="model_estate_property"/>
-    <field name="binding_type">report</field>
-</record>
-
-<!-- QWeb template -->
-<template id="report_estate_property_document">
-    <t t-call="web.html_container">
-        <t t-call="web.external_layout">
-            <div class="page">
-                <t t-foreach="docs" t-as="doc">
-                    <h2><t t-esc="doc.name"/></h2>
-                    <p>Expected Price: <t t-esc="doc.expected_price"/></p>
-                    <p>Status: <t t-esc="doc.state"/></p>
-                </t>
-            </div>
-        </t>
-    </t>
-</template>
-```
-
----
-
 ## Computed Fields Patterns
 
 ### Stored Computed (triggers recompute on DB change)
@@ -555,40 +496,6 @@ def _inverse_field(self):
     for record in self:
         # write back derived values
         pass
-```
-
----
-
-## ORM Common Methods
-
-```python
-# Search
-records = self.env["estate.property"].search([("state", "=", "new")])
-records = self.env["estate.property"].search([("state", "=", "new")], limit=10, order="name")
-
-# Read
-record = self.env["estate.property"].browse(record_id)
-record.ensure_one()  # raises if not exactly one record
-
-# Create
-new_record = self.env["estate.property"].create({
-    "name": "Property Name",
-    "expected_price": 250000.0,
-})
-
-# Write
-record.write({"state": "sold"})
-
-# Unlink
-record.unlink()
-
-# Search count
-count = self.env["estate.property"].search_count([("state", "=", "new")])
-
-# Mapped / Filtered
-prices = records.mapped("expected_price")
-active_only = records.filtered(lambda r: r.active)
-sorted_records = records.sorted(key=lambda r: r.expected_price, reverse=True)
 ```
 
 ---

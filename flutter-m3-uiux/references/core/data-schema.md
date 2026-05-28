@@ -24,39 +24,6 @@ class AppBreakpoints {
 
 ---
 
-## Design Token Schema
-
-```typescript
-interface DesignTokens {
-  // ── Spacing ──────────────────────────────────────
-  spacing: {
-    xxxs?: 2, xxs: 4,  xs: 4 | 6, sm: 8, md: 16,
-    lg:  24, xl: 32,  xxl: 48, xxxl: 64
-  };
-
-  // ── Border Radius ──────────────────────────────────
-  radius: {
-    xs: 8 | 4, sm: 12 | 8, md: 16 | 12, lg: 28 | 16,
-    xl: 32 | 24, xxl: 48 | 32, full: 9999
-  };
-
-  // ── Duration ──────────────────────────────────────
-  duration: {
-    fast:   150,  // ms — micro-interactions
-    normal: 250,  // ms — standard transitions
-    slow:   400   // ms — complex animations
-  };
-
-  // ── Icon Sizes ────────────────────────────────────
-  iconSize: {
-    xxxs?: 12, xxs: 14 | 16, xs: 16 | 18, sm: 20, md: 24,
-    lg: 28 | 32,  xl: 40 | 48, xxl: 48 | 64
-  };
-}
-```
-
----
-
 ## Color Token Schema (Material 3 Semantic)
 
 Material 3 generates these automatically via `ColorScheme.fromSeed`. Query them via `Theme.of(context).colorScheme.*`:
