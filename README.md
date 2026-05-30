@@ -22,7 +22,7 @@ Install skills directly from this repository using [`npx skills`](https://skills
 Browse and select which skills to install:
 
 ```bash
-npx skills add https://github.com/LuisGamas/skills
+npx skills add https://github.com/luisgamas/skills
 ```
 
 ### Individual Skill
@@ -30,23 +30,23 @@ npx skills add https://github.com/LuisGamas/skills
 Install a specific skill by pointing to its directory:
 
 ```bash
-npx skills add https://github.com/LuisGamas/skills/tree/main/flutter-clean-architect
+npx skills add https://github.com/luisgamas/skills/tree/main/flutter-clean-architect
 ```
 
 ```bash
-npx skills add https://github.com/LuisGamas/skills/tree/main/flutter-init-project
+npx skills add https://github.com/luisgamas/skills/tree/main/flutter-init-project
 ```
 
 ```bash
-npx skills add https://github.com/LuisGamas/skills/tree/main/flutter-m3-uiux
+npx skills add https://github.com/luisgamas/skills/tree/main/flutter-m3-uiux
 ```
 
 ```bash
-npx skills add https://github.com/LuisGamas/skills/tree/main/flutter-riverpod-expert
+npx skills add https://github.com/luisgamas/skills/tree/main/flutter-riverpod-expert
 ```
 
 ```bash
-npx skills add https://github.com/LuisGamas/skills/tree/main/odoo-modules-creator
+npx skills add https://github.com/luisgamas/skills/tree/main/odoo-modules-creator
 ```
 
 ## Available Skills
@@ -111,15 +111,15 @@ This project is licensed under the [Mozilla Public License 2.0](./LICENSE).
 If you find these skills useful, consider supporting their development:
 
 <a href="https://sink.gamas.workers.dev/buymeacoffee">
-  <img src="https://raw.githubusercontent.com/LuisGamas/buttons-design/main/buy_me_a_coffe/buy_me_a_coffe_fill.png" width="220" alt="Buy Me a Coffee" />
+  <img src="https://raw.githubusercontent.com/luisgamas/buttons-design/main/buy_me_a_coffe/buy_me_a_coffe_fill.png" width="220" alt="Buy Me a Coffee" />
 </a>
 &nbsp;&nbsp;
 <a href="https://sink.gamas.workers.dev/paypal-donations">
-  <img src="https://raw.githubusercontent.com/LuisGamas/buttons-design/main/paypal/paypal_fill.png" width="220" alt="Donate via PayPal" />
+  <img src="https://raw.githubusercontent.com/luisgamas/buttons-design/main/paypal/paypal_fill.png" width="220" alt="Donate via PayPal" />
 </a>
 &nbsp;&nbsp;
 <a href="https://sink.gamas.workers.dev/github-sponsor">
-  <img src="https://raw.githubusercontent.com/LuisGamas/buttons-design/main/github_sponsor/github_sponsor_fill.png" width="220" alt="Sponsor on GitHub" />
+  <img src="https://raw.githubusercontent.com/luisgamas/buttons-design/main/github_sponsor/github_sponsor_fill.png" width="220" alt="Sponsor on GitHub" />
 </a>
 
 </div>
