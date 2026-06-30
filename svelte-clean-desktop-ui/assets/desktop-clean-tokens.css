@@ -1,0 +1,133 @@
+/* Starter token layer for a Svelte 5 desktop app stylesheet.
+   Merge deliberately with the existing shadcn-svelte tokens. */
+
+@custom-variant can-hover (@media (hover: hover));
+
+:root {
+  --ux-font-body: "DM Sans Variable", "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --ux-font-title: var(--ux-font-body);
+  --ux-font-mono: "SF Mono", "SFMono-Regular", "JetBrains Mono", Consolas, "Liberation Mono", Menlo, monospace;
+
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+  --primary: #171717;
+  --primary-foreground: #fafafa;
+  --secondary: #f5f5f5;
+  --secondary-foreground: #171717;
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  --accent: #f5f5f5;
+  --accent-foreground: #171717;
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --ring: #a1a1a1;
+  --sidebar: #f7f7f7;
+  --sidebar-foreground: #0a0a0a;
+  --sidebar-border: #e5e5e5;
+
+  --ux-shell: #ffffff;
+  --ux-sidebar-accent: #ececec;
+  --ux-sidebar-hover: rgb(10 10 10 / 0.055);
+  --ux-panel: #ffffff;
+  --ux-panel-muted: #fafafa;
+  --ux-editor-surface: #ffffff;
+  --ux-elevated: #ffffff;
+  --ux-subtle-border: rgb(10 10 10 / 0.09);
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --card: #171717;
+  --card-foreground: #fafafa;
+  --popover: #171717;
+  --popover-foreground: #fafafa;
+  --primary: #e5e5e5;
+  --primary-foreground: #171717;
+  --secondary: #262626;
+  --secondary-foreground: #fafafa;
+  --muted: #262626;
+  --muted-foreground: #a1a1a1;
+  --accent: #353535;
+  --accent-foreground: #fafafa;
+  --border: rgb(255 255 255 / 0.07);
+  --input: rgb(255 255 255 / 0.15);
+  --ring: #737373;
+  --sidebar: #171717;
+  --sidebar-foreground: #fafafa;
+  --sidebar-border: rgb(255 255 255 / 0.07);
+
+  --ux-shell: #0a0a0a;
+  --ux-sidebar-accent: #262626;
+  --ux-sidebar-hover: rgb(255 255 255 / 0.065);
+  --ux-panel: #111111;
+  --ux-panel-muted: #171717;
+  --ux-editor-surface: #1e1e1e;
+  --ux-elevated: #171717;
+  --ux-subtle-border: rgb(255 255 255 / 0.08);
+}
+
+@theme inline {
+  --color-ux-shell: var(--ux-shell);
+  --color-ux-sidebar-accent: var(--ux-sidebar-accent);
+  --color-ux-panel: var(--ux-panel);
+  --color-ux-panel-muted: var(--ux-panel-muted);
+  --color-ux-editor-surface: var(--ux-editor-surface);
+  --color-ux-elevated: var(--ux-elevated);
+  --color-ux-subtle-border: var(--ux-subtle-border);
+}
+
+.scrollbar-sleek {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--muted-foreground, #737373) 34%, transparent) transparent;
+}
+
+.scrollbar-sleek::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.scrollbar-sleek::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-sleek::-webkit-scrollbar-thumb {
+  min-height: 28px;
+  border: 3px solid transparent;
+  border-radius: 0;
+  background: color-mix(in srgb, var(--muted-foreground, #737373) 28%, transparent);
+  background-clip: padding-box;
+}
+
+.scrollbar-sleek::-webkit-scrollbar-thumb:hover {
+  background-color: color-mix(in srgb, var(--muted-foreground, #737373) 48%, transparent);
+}
+
+.worktree-sidebar-scrollbar {
+  padding-right: 4px;
+  scrollbar-gutter: stable;
+  scrollbar-color: transparent transparent;
+}
+
+.worktree-sidebar-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.worktree-sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-width: 3px 3px 3px 0;
+}
+
+.scrollbar-sleek-parent:hover .worktree-sidebar-scrollbar,
+.worktree-sidebar-scrollbar:hover {
+  scrollbar-color: color-mix(in srgb, var(--muted-foreground, #737373) 48%, transparent) transparent;
+}
+
+.scrollbar-sleek-parent:hover .worktree-sidebar-scrollbar::-webkit-scrollbar-thumb,
+.worktree-sidebar-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: color-mix(in srgb, var(--muted-foreground, #737373) 28%, transparent);
+}

@@ -4,10 +4,11 @@
 
 [![License](https://img.shields.io/badge/LICENSE-MPL_2.0-blue?style=for-the-badge)](./LICENSE)
 [![Flutter](https://img.shields.io/badge/FLUTTER-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
+[![Svelte](https://img.shields.io/badge/SVELTE-FF3E00?style=for-the-badge&logo=svelte&logoColor=white)](https://svelte.dev)
 [![Odoo](https://img.shields.io/badge/ODOO_18-714B67?style=for-the-badge&logo=odoo&logoColor=white)](https://www.odoo.com)
-[![Skills](https://img.shields.io/badge/SKILLS-5-green?style=for-the-badge)](#available-skills)
+[![Skills](https://img.shields.io/badge/SKILLS-6-green?style=for-the-badge)](#available-skills)
 
-Curated AI agent skills for **Flutter** and **Odoo** development. Each skill provides deep domain expertise, architectural patterns, reference documentation, and real-world examples that turn your AI coding agent into a specialized assistant.
+Curated AI agent skills for **Flutter**, **Svelte**, and **Odoo** development. Each skill provides deep domain expertise, architectural patterns, reference documentation, and real-world examples that turn your AI coding agent into a specialized assistant.
 
 </div>
 
@@ -46,6 +47,10 @@ npx skills add https://github.com/luisgamas/skills/tree/main/flutter-riverpod-ex
 ```
 
 ```bash
+npx skills add https://github.com/luisgamas/skills/tree/main/svelte-clean-desktop-ui
+```
+
+```bash
 npx skills add https://github.com/luisgamas/skills/tree/main/odoo-modules-creator
 ```
 
@@ -59,6 +64,12 @@ npx skills add https://github.com/luisgamas/skills/tree/main/odoo-modules-creato
 | **flutter-init-project** | Bootstrap a Flutter project into a production-ready baseline with Clean Architecture scaffolding, manual Riverpod, GoRouter, Material 3, and reusable bootstrap assets. |
 | **flutter-m3-uiux** | Design and implement Flutter interfaces using Material Design 3 with token-driven styling, responsive layouts, accessibility constraints, and UI auditing support. |
 | **flutter-riverpod-expert** | Modern Riverpod state management, migration from legacy patterns, notifier-based state, dependency injection, rebuild optimization, and advanced features. |
+
+### Svelte
+
+| Skill | Description |
+|-------|-------------|
+| **svelte-clean-desktop-ui** | Redesign or create Svelte 5 desktop application interfaces using shadcn-svelte, Bits UI, Tailwind v4, DM Sans typography, neutral surface tokens, compact density, and polished component recipes. |
 
 ### Odoo
 
@@ -80,6 +91,10 @@ Bootstrap a new Flutter project with Riverpod and Material 3
 
 ```
 Create an Odoo 18 module for inventory management
+```
+
+```
+Redesign this Svelte 5 desktop sidebar with a clean token-driven style
 ```
 
 ## Skill Structure

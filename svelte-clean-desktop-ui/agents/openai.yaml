@@ -1,0 +1,4 @@
+interface:
+  display_name: "Svelte Clean Desktop UI"
+  short_description: "Clean Svelte 5 desktop UI system"
+  default_prompt: "Use $svelte-clean-desktop-ui to redesign or create Svelte 5 desktop UI components with a clean shadcn-svelte style."
