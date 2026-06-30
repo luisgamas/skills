@@ -38,19 +38,28 @@ Recommended application:
 
 ### 3. Typography
 
-Use DM Sans for primary UI text. In t3code, web and desktop preview surfaces use `"DM Sans Variable", "DM Sans"` with system fallbacks, marketing imports Google Fonts DM Sans weights 400/500/600, and mobile uses Expo families `DMSans_400Regular`, `DMSans_500Medium`, and `DMSans_700Bold`.
+The UI face is the single highest-impact lever on how soft or how robotic the whole
+interface reads. Use **Geist** (a humanist, low-contrast variable sans, weight range
+100-900) for primary UI text. Avoid rigid geometric sans faces (DM Sans, Poppins,
+Montserrat) for dense desktop chrome: their uniform strokes and round, tightly-spaced
+bowls render heavy and "mechanical" at 12-13px, which is exactly the noisy/robotic
+texture this skill exists to remove. A humanist face opens the letter rhythm and keeps
+small UI text light and even.
 
 For Svelte desktop webviews, prefer:
 
 ```css
---ux-font-body: "DM Sans Variable", "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+--ux-font-body: "Geist Variable", "Geist", "DM Sans Variable", "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
 --ux-font-title: var(--ux-font-body);
 --ux-font-mono: "SF Mono", "SFMono-Regular", "JetBrains Mono", Consolas, "Liberation Mono", Menlo, monospace;
 ```
 
+Geist leads; DM Sans and the system UI stack stay in the chain as graceful fallbacks.
+
 Recommended application:
 
-- install/import `@fontsource-variable/dm-sans` when bundling fonts locally is desired;
+- install/import `@fontsource-variable/geist` when bundling fonts locally is desired (it exposes the `"Geist Variable"` family);
+- set the rendering hints on `body` so the face stays light and even, not heavy: `-webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; letter-spacing: 0.01em;`
 - keep body at 12-13px;
 - use `font-medium` for interactive labels, `font-semibold` for section titles, muted regular text for metadata;
 - avoid excessive uppercase.
@@ -86,6 +95,8 @@ Recommended application:
 - Generic shadcn neutral tokens often lack enough surface roles for desktop shell depth.
 - Compact text tokens can skew too small if they do not define panels, rows, controls, elevation, and focus as a complete system.
 - Strong borders and broad primary-tinted active states feel mechanical; use neutral sidebar accents instead.
+- Full-strength hairlines are a top cause of a "noisy" shell: a structural divider applied as `border-border` (e.g. `border-b border-border` on a top band or status bar) reads as a hard, crisp line. Soften every structural divider to `border-border/50`-`/60`, or a `color-mix(in srgb, var(--border) 60-72%, transparent)` line, so separators stay quiet against the content.
+- A geometric UI face (DM Sans, Poppins, Montserrat) makes the whole interface read heavier and more robotic than the same layout in a humanist variable face (Geist). When an interface "feels noisy" with no obvious layout fault, check the typeface first.
 - Search/settings buttons often look too heavy when they should read as compact field-like controls.
 - Settings pages become hard to scan when they are long collections of ad hoc groups instead of section surfaces with consistent row recipes.
 - Resize handles should be quiet until hover; use wider hit targets with thinner visible lines.

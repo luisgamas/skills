@@ -65,15 +65,27 @@ Principles:
 
 ## Typography
 
-Preferred stack:
+Preferred stack — lead with **Geist**, a humanist low-contrast variable sans that
+renders softer and lighter than a geometric face at dense UI sizes (the texture lever;
+see `visual-direction.md` §3):
 
 ```css
---ux-font-body: "DM Sans Variable", "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+--ux-font-body: "Geist Variable", "Geist", "DM Sans Variable", "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
 --ux-font-title: var(--ux-font-body);
 --ux-font-mono: "SF Mono", "SFMono-Regular", "JetBrains Mono", Consolas, "Liberation Mono", Menlo, monospace;
 ```
 
-For local bundling, use `@fontsource-variable/dm-sans` and import it once in the application entry or app stylesheet. If the font is not bundled yet, keep the fallback stack intact.
+For local bundling, use `@fontsource-variable/geist` and import it once in the application entry or app stylesheet (it exposes the `"Geist Variable"` family). If the font is not bundled yet, keep the fallback stack intact.
+
+Set the font-rendering hints once on `body` so the face stays light and even rather than heavy:
+
+```css
+body {
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+```
 
 Type roles:
 
@@ -105,7 +117,7 @@ Avoid inflating spacing globally. Add breathing room between groups, not inside 
 Default:
 
 - Use `border-border/50` for cards and section bodies.
-- Use `border-border/60` for dividers.
+- Use `border-border/60` for dividers — including the **structural** ones (panel top bands, status bar, toolbar seams). Do not apply these at full strength (`border-border`): a full-strength hairline reads as a hard, crisp line and is a top cause of a "noisy"/robotic shell. When you need an even quieter seam, use `color-mix(in srgb, var(--border) 60-72%, transparent)`.
 - Use foreground-mixed borders for elevated overlays when Tailwind arbitrary values are practical.
 - Use `shadow-xs` or `shadow-sm` only for elevated cards, popovers, dialogs, and floating controls.
 

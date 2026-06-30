@@ -4,7 +4,10 @@
 @custom-variant can-hover (@media (hover: hover));
 
 :root {
-  --ux-font-body: "DM Sans Variable", "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  /* Lead with Geist (humanist variable sans) — the soft, light UI face. DM Sans
+     and the system stack stay as graceful fallbacks. Bundle the face locally with
+     `@import "@fontsource-variable/geist/index.css";` if it isn't installed. */
+  --ux-font-body: "Geist Variable", "Geist", "DM Sans Variable", "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --ux-font-title: var(--ux-font-body);
   --ux-font-mono: "SF Mono", "SFMono-Regular", "JetBrains Mono", Consolas, "Liberation Mono", Menlo, monospace;
 

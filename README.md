@@ -69,7 +69,7 @@ npx skills add https://github.com/luisgamas/skills/tree/main/odoo-modules-creato
 
 | Skill | Description |
 |-------|-------------|
-| **svelte-clean-desktop-ui** | Redesign or create Svelte 5 desktop application interfaces using shadcn-svelte, Bits UI, Tailwind v4, DM Sans typography, neutral surface tokens, compact density, and polished component recipes. |
+| **svelte-clean-desktop-ui** | Redesign or create Svelte 5 desktop application interfaces using shadcn-svelte, Bits UI, Tailwind v4, Geist (humanist variable sans) typography, softened hairlines, neutral surface tokens, compact density, and polished component recipes. |
 
 ### Odoo
 

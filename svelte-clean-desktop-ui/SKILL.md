@@ -1,6 +1,6 @@
 ---
 name: svelte-clean-desktop-ui
-description: Token-driven clean desktop UI/UX system for redesigning or creating Svelte 5 application interfaces with shadcn-svelte, Bits UI, Tailwind v4, and lucide icons. Use for desktop app visual systems, component styling, shell layouts, sidebars, settings screens, cards, menus, tabs, forms, dialogs, terminal/editor panes, compact density, neutral surface layering, DM Sans typography, and making an interface feel polished, modern, precise, and less robotic without changing UI libraries.
+description: Token-driven clean desktop UI/UX system for redesigning or creating Svelte 5 application interfaces with shadcn-svelte, Bits UI, Tailwind v4, and lucide icons. Use for desktop app visual systems, component styling, shell layouts, sidebars, settings screens, cards, menus, tabs, forms, dialogs, terminal/editor panes, compact density, neutral surface layering, Geist (humanist variable sans) typography, softened hairlines, and making an interface feel polished, modern, precise, soft, and less robotic without changing UI libraries.
 ---
 
 # Svelte Clean Desktop UI
@@ -48,7 +48,9 @@ Aim for this result:
 - rounded corners mostly `6px` to `10px`, with `12px` reserved for larger settings/content surfaces;
 - icons as functional controls, usually 12-16px, with stroke weight and opacity adjusted by state;
 - menus, popovers, and dialogs that feel like desktop tools: compact, aligned, with clear focus rings;
-- DM Sans or DM Sans Variable for primary UI text, with a strong monospace stack for code and terminal surfaces.
+- Geist (Geist Variable, weight range 100-900) for primary UI text — a humanist, low-contrast variable sans that renders light and soft at dense UI sizes — with a strong monospace stack for code and terminal surfaces.
+
+The single biggest lever for a soft, light, non-robotic texture is the **typeface**: prefer a humanist low-contrast variable sans (Geist) over a rigid geometric one (DM Sans, Poppins, Montserrat). Geometric faces have uniform strokes and round, tightly-spaced bowls that read heavy and "mechanical" at 12-13px; a humanist face opens the rhythm and lightens the texture. Pair it with grayscale font-smoothing and a touch of tracking (see `references/core-style-system.md`).
 
 Avoid:
 
@@ -89,7 +91,7 @@ Before touching many components, update the token layer:
 
 Use these quick choices:
 
-- If a component feels robotic: soften surface contrast, reduce heavy borders, improve type hierarchy, add precise hover/focus states.
+- If a component feels robotic or noisy: in order of impact — (1) switch the UI face to a humanist variable sans (Geist) if it isn't already; (2) soften every structural hairline to `border-border/50`-`/60` or a `color-mix` border instead of full-strength `border-border`; (3) lower chrome-text contrast (muted/60 instead of full foreground); (4) remove redundant dividers; (5) soften surface contrast and add precise hover/focus states.
 - If a component feels cramped: add vertical rhythm by grouping rows, not by inflating every control.
 - If a component feels empty: improve alignment, surface layering, and metadata placement before adding decoration.
 - If a component lacks polish: check font, sidebar surface variables, hover opacity, rounded corners, and active-state strength first.
