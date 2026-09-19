@@ -1,6 +1,6 @@
 # Workflows
 
-Recipes over the `read` and `ui` groups. Every example uses `--json` and reads the
+Recipes over the `read`, `ui`, `create` and `converse` groups. Every example uses `--json` and reads the
 exit status; the MCP tool form is the same entry with the same arguments.
 
 ## Check the app before anything else
@@ -64,6 +64,30 @@ uxnan-cli browser reload                 # after changing code
 ```
 
 Opens follow the person's link policy (in-app, system browser, or ask).
+
+## Talk to a running agent: send, wait, read
+
+```sh
+uxnan-cli agent send --to id:<terminalId> --message-file next-step.md --json   # queued until the agent is free
+uxnan-cli agent wait --to id:<terminalId> --for idle --timeout 900             # heartbeats on stderr, result on stdout
+uxnan-cli terminal read id:<terminalId> --lines 60                             # its screen, secrets redacted
+```
+
+`--force` on `send` types the message now and interrupts the agent — rare.
+`wait --for waiting` returns when the agent stopped to ask the person
+something (answer it with another `send`); `--for exit` when its terminal is
+gone. Exit 6 is the timeout; exit 5 on `read` means the project switched
+reads off.
+
+## Give a subtask its own space
+
+```sh
+uxnan-cli worktree create --project current --branch feat/sub --agent claude \
+  --prompt-file task.md --idempotency-key "$(uuidgen)" --json
+# → receipt: the worktree, and .terminal.id of the launched agent; retry with the same key is safe
+uxnan-cli terminal create --worktree branch:feat/sub --title build --json
+uxnan-cli run start <run-id> --json
+```
 
 ## Read an orchestration run
 

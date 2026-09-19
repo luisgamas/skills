@@ -38,9 +38,16 @@ Load only what the task needs:
 uxnan-cli status
 uxnan-cli project ls | show <project>
 uxnan-cli worktree ls [--project <project>] | show <worktree>
+uxnan-cli worktree create --project <project> --branch <name> [--base <ref>] [--from-existing]
+                          [--agent <agent>] [--prompt-file <file>] [--idempotency-key <key>]
 uxnan-cli terminal ls [--worktree <worktree>] | show <terminal> | reveal <terminal>
+uxnan-cli terminal create --worktree <worktree> [--title <t>] [--agent <agent>] [--prompt-file <file>]
 uxnan-cli agent ls
-uxnan-cli run ls | show <run-id>
+uxnan-cli agent send --to <terminal> --message-file <file> [--force] [--idempotency-key <key>]
+uxnan-cli agent wait --to <terminal> --for idle|waiting|exit [--timeout <seconds>]
+uxnan-cli terminal read <terminal> [--lines <n>]
+uxnan-cli run ls | show <run-id> | start <run-id> [--idempotency-key <key>]
+uxnan-cli automation ls | run <automation-id> [--idempotency-key <key>]
 uxnan-cli app focus
 uxnan-cli file open <path> [--worktree <worktree>]
 uxnan-cli file diff <path> [--worktree <worktree>] [--staged]
@@ -81,8 +88,13 @@ A bare word is refused, not guessed: a branch and a project name can collide.
   | 7 | the selector named nothing |
   | 8 | the target is busy |
 
-- Never pass long content as an argument; today no entry takes free text into a
-  terminal, and the ones that will (the `converse` group) take a file.
+- Never pass long content as an argument: a first message or a message to an
+  agent always comes from a file (`--prompt-file`, `--message-file`), capped at
+  64 KiB; put anything longer in a file and tell the agent to read it.
+- Prefer the queue: `agent send` waits for the agent to be free. `--force`
+  interrupts it and is for a person's decision, not a routine step.
+- Every `create` and `converse` call is written to the app's audit log with
+  your caller identity; a screen read is redacted before you see it.
 - `current` only means something inside a terminal Uxnan launched. Elsewhere,
   list first (`project ls --json`, `worktree ls --json`, `terminal ls --json`)
   and use `id:` / `path:` / `branch:` / `name:`.
@@ -94,7 +106,8 @@ A bare word is refused, not guessed: a branch and a project name can collide.
 
 ## Capability groups
 
-`read` and `ui` ship today; `create` (worktrees, terminals, saved runs),
-`converse` (send a message to an agent, wait for its state, read its screen) and
-`orchestrate` (tasks, inbox, questions) follow. `uxnan-cli status --json` says
-which groups the running app has enabled — check it before assuming an entry.
+`read`, `ui`, `create` (worktrees, terminals, saved runs and automations) and
+`converse` (send a message to an agent, wait for its state, read its screen) ship
+today; `orchestrate` (tasks, inbox, questions) follows. `uxnan-cli status --json`
+says which groups the running app has enabled — check it before assuming an
+entry.

@@ -8,9 +8,17 @@ Operate the running Uxnan Desktop from a shell or from an agent. Two doors to on
 uxnan-cli status
 uxnan-cli project ls | show <project>
 uxnan-cli worktree ls [--project <project>] | show <worktree>
+uxnan-cli worktree create --project <project> --branch <name> [--base <ref>] [--from-existing]
+                          [--agent <agent>] [--prompt-file <file>] [--idempotency-key <key>]
 uxnan-cli terminal ls [--worktree <worktree>] | show <terminal> | reveal <terminal>
+uxnan-cli terminal create --worktree <worktree> [--title <t>] [--agent <agent>] [--prompt-file <file>]
+                          [--idempotency-key <key>]
 uxnan-cli agent ls
-uxnan-cli run ls | show <run-id>
+uxnan-cli agent send --to <terminal> --message-file <file> [--force] [--idempotency-key <key>]
+uxnan-cli agent wait --to <terminal> --for idle|waiting|exit [--timeout <seconds>]
+uxnan-cli terminal read <terminal> [--lines <n>]
+uxnan-cli run ls | show <run-id> | start <run-id> [--idempotency-key <key>]
+uxnan-cli automation ls | run <automation-id> [--idempotency-key <key>]
 uxnan-cli app focus
 uxnan-cli file open <path> [--worktree <worktree>]
 uxnan-cli file diff <path> [--worktree <worktree>] [--staged]
@@ -42,6 +50,7 @@ Global: --json (stable machine output), --timeout <seconds>
 - `agent/list` (MCP tool `agent_list`)
 - `run/list` (MCP tool `run_list`)
 - `run/show` (MCP tool `run_show`)
+- `automation/list` (MCP tool `automation_list`)
 - `browser/status` (MCP tool `browser_status`)
 
 ### `ui` (v1) — actions on the window that change nothing on disk or in a process
@@ -55,6 +64,19 @@ Global: --json (stable machine output), --timeout <seconds>
 - `browser/reload` (MCP tool `browser_reload`)
 - `browser/back` (MCP tool `browser_back`)
 - `browser/forward` (MCP tool `browser_forward`)
+
+### `create` (v1) — create a worktree or a terminal, start a saved run
+
+- `worktree/create` (MCP tool `worktree_create`)
+- `terminal/create` (MCP tool `terminal_create`)
+- `run/start` (MCP tool `run_start`)
+- `automation/run` (MCP tool `automation_run`)
+
+### `converse` (v1) — talk to a running agent
+
+- `agent/send` (MCP tool `agent_send`)
+- `agent/wait` (MCP tool `agent_wait`)
+- `terminal/read` (MCP tool `terminal_read`)
 
 ### `orchestrate` (v1) — coordinate several agents
 
@@ -155,6 +177,14 @@ Arguments:
 
 - `run` (string, required) — The run id from `run/list`.
 
+### `automation/list`
+
+MCP tool: `automation_list` · group: `read` · read-only
+
+List the saved automations (unattended, recurring agent runs): id, name, whether it is enabled, its schedule and its working folder.
+
+No arguments.
+
 ### `browser/status`
 
 MCP tool: `browser_status` · group: `read` · read-only
@@ -248,6 +278,94 @@ Go forward one entry in the integrated browser's history. Errors if no page is o
 
 No arguments.
 
+### `worktree/create`
+
+MCP tool: `worktree_create` · group: `create` · mutates
+
+Create a git worktree on a new branch of a project — where Uxnan's worktree-location policy puts it — make it the active worktree, and optionally launch an agent in it with a first message. Use it to give a subtask its own isolated space and agent instead of running `git worktree add` yourself: Uxnan then sees, lists and can stop it. Returns a receipt with the worktree and, when an agent was launched, its terminal id.
+
+Arguments:
+
+- `agent` (string, optional) — Which configured agent to launch, by its profile name, its command (e.g. `claude`, `codex`) or its profile id. Omit for no agent (a plain terminal).
+- `base` (string, optional) — The ref to branch from. Default: the project's default base (its main branch).
+- `branch` (string, required) — The new branch name (also the worktree's folder name under the policy's root).
+- `fromExisting` (boolean, optional) — Check out an existing branch named `branch` instead of creating it. Default false.
+- `idempotencyKey` (string, optional) — Optional caller-chosen key (e.g. a UUID). Repeating a call with the same key returns the receipt of the first call instead of creating a second worktree/terminal/run. Held for the app's lifetime.
+- `project` (string, required) — Which project: `current` (the project of the terminal you run in), `id:<projectId>`, `path:<absolute folder>`, or `name:<project name>`.
+- `prompt` (string, optional) — A first message for the launched agent, typed into it once it is ready (queued behind Uxnan's backpressure, so it is never pasted into a busy agent). Requires `agent`. At most 64 KiB.
+
+### `terminal/create`
+
+MCP tool: `terminal_create` · group: `create` · mutates
+
+Open a new terminal tab in a worktree, optionally launching a configured agent in it with a first message. Returns a receipt with the terminal id.
+
+Arguments:
+
+- `agent` (string, optional) — Which configured agent to launch, by its profile name, its command (e.g. `claude`, `codex`) or its profile id. Omit for no agent (a plain terminal).
+- `idempotencyKey` (string, optional) — Optional caller-chosen key (e.g. a UUID). Repeating a call with the same key returns the receipt of the first call instead of creating a second worktree/terminal/run. Held for the app's lifetime.
+- `prompt` (string, optional) — A first message for the launched agent, typed into it once it is ready (queued behind Uxnan's backpressure, so it is never pasted into a busy agent). Requires `agent`. At most 64 KiB.
+- `title` (string, optional) — A tab title. Default: the worktree folder name.
+- `worktree` (string, required) — Which worktree: `current` (the one your terminal runs in), `path:<absolute folder>`, or `branch:<branch name>`.
+
+### `run/start`
+
+MCP tool: `run_start` · group: `create` · mutates
+
+Start (or re-run) a saved orchestration run by id: every step is reset and the engine begins dispatching. Refused with the validation errors when the run is not runnable. Only saved runs can be started; there is no way to inject steps from here.
+
+Arguments:
+
+- `idempotencyKey` (string, optional) — Optional caller-chosen key (e.g. a UUID). Repeating a call with the same key returns the receipt of the first call instead of creating a second worktree/terminal/run. Held for the app's lifetime.
+- `run` (string, required) — The run id from `run/list`.
+
+### `automation/run`
+
+MCP tool: `automation_run` · group: `create` · mutates
+
+Run a saved automation now, as a manual run of the same headless runner its schedule uses. Only saved definitions can be run.
+
+Arguments:
+
+- `automation` (string, required) — The automation id from `automation/list`.
+- `idempotencyKey` (string, optional) — Optional caller-chosen key (e.g. a UUID). Repeating a call with the same key returns the receipt of the first call instead of creating a second worktree/terminal/run. Held for the app's lifetime.
+
+### `agent/send`
+
+MCP tool: `agent_send` · group: `converse` · mutates
+
+Send a complete message to a running agent, as one paste-and-submit — never as keystrokes. By default the message waits in Uxnan's backpressure queue until that agent is free (not working); `force` types it now, which interrupts whatever the agent is doing and should be rare. Only an agent's terminal can receive a message; a plain shell has nobody to read it. Use `agent/wait` afterwards to learn when the agent has finished.
+
+Arguments:
+
+- `force` (boolean, optional) — Type it now even if the agent is working. Default false.
+- `idempotencyKey` (string, optional) — Optional caller-chosen key (e.g. a UUID). Repeating a call with the same key returns the receipt of the first call instead of creating a second worktree/terminal/run. Held for the app's lifetime.
+- `message` (string, required) — The whole message, as the person would type it. At most 64 KiB.
+- `terminal` (string, required) — Which terminal: `current` (the one you run in, from UXNAN_AGENT_ID), or `id:<terminalId>` from `terminal/list`.
+
+### `agent/wait`
+
+MCP tool: `agent_wait` · group: `converse` · read-only
+
+Wait until an agent reaches a state, as reported by its own hooks: `idle` (its turn finished — the state to wait for after sending a message), `waiting` (it stopped to ask the person something), or `exit` (its terminal is gone). Returns the state reached and how long it took, or a timeout. One call waits at most 15 seconds; call again to keep waiting (uxnan-cli does this for you and prints a heartbeat).
+
+Arguments:
+
+- `for` (string, required) — `idle`, `waiting` or `exit`.
+- `terminal` (string, required) — Which terminal: `current` (the one you run in, from UXNAN_AGENT_ID), or `id:<terminalId>` from `terminal/list`.
+- `timeoutMs` (integer, optional) — How long this call may wait, in milliseconds. Capped at 15000. Default 15000.
+
+### `terminal/read`
+
+MCP tool: `terminal_read` · group: `converse` · read-only
+
+Read the last lines of a terminal's screen as plain text (escapes removed, blank rows dropped), with secrets redacted — tokens, keys, `Authorization` headers, `password=`. Use it to see what an agent printed or asked. Every read is written to Uxnan's audit log; a project can switch reads off in Settings.
+
+Arguments:
+
+- `lines` (integer, optional) — How many lines from the bottom. Default 120, at most 2000.
+- `terminal` (string, required) — Which terminal: `current` (the one you run in, from UXNAN_AGENT_ID), or `id:<terminalId>` from `terminal/list`.
+
 ### `orchestration/reportResult`
 
 MCP tool: `orchestration_report_result` · group: `orchestrate` · mutates
@@ -274,6 +392,10 @@ Arguments:
 ## Output and exit status
 
 Human-readable output goes to stdout; errors go to stderr. `--json` prints the raw result object, stable across versions: fields may be added, never renamed or removed without a protocol bump. Prefer `--json` from a script or an agent.
+
+`agent send` queues a whole message for a running agent until it is free (`--force` types it now and interrupts); `agent wait --for idle` blocks until the agent's own hooks report its turn finished, printing a heartbeat to stderr every 15 s; `terminal read` returns the screen with secrets redacted and is written to the audit log. Together they are the loop: send, wait, read.
+
+A `create` entry answers with a **receipt**: `{ requestId, idempotencyKey?, … }` plus what was created. Pass `--idempotency-key` (any string you choose, e.g. a UUID) and a retry of the same call returns the first receipt instead of creating a second worktree, terminal or run — so a lost reply is safe to retry. Every `create` call, done or refused, is written to `control-audit.log` in the app's data directory (prompt text is recorded as its length only).
 
 | Exit | Meaning |
 |---|---|
