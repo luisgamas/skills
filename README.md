@@ -54,6 +54,10 @@ npx skills add https://github.com/luisgamas/skills/tree/main/svelte-clean-deskto
 npx skills add https://github.com/luisgamas/skills/tree/main/odoo-modules-creator
 ```
 
+```bash
+npx skills add https://github.com/luisgamas/skills/tree/main/uxnan-control
+```
+
 ## Available Skills
 
 ### Flutter
@@ -76,6 +80,12 @@ npx skills add https://github.com/luisgamas/skills/tree/main/odoo-modules-creato
 | Skill | Description |
 |-------|-------------|
 | **odoo-modules-creator** | Create and extend Odoo 18 addons using the ORM, XML views, manifests, security, controllers, wizards, reports, and modular extension patterns. |
+
+### Uxnan
+
+| Skill | Description |
+|-------|-------------|
+| **uxnan-control** | Operate a running Uxnan Desktop from a shell or an agent: `uxnan-cli` and the MCP tools it injects into the agents it launches — projects, worktrees, terminals, agents, runs, files, diffs and the integrated browser — with stable `--json` output, selectors and documented exit codes. Generated from the app's own catalog. |
 
 ## Usage
 
