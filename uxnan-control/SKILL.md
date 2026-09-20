@@ -99,6 +99,10 @@ A bare word is refused, not guessed: a branch and a project name can collide.
 - `current` only means something inside a terminal Uxnan launched. Elsewhere,
   list first (`project ls --json`, `worktree ls --json`, `terminal ls --json`)
   and use `id:` / `path:` / `branch:` / `name:`.
+- Inside a terminal Uxnan launched you reach **only that terminal's project**:
+  listings are narrowed to it and naming another project's worktree or
+  terminal is *scope denied* (exit 5) — stop, do not retry with another
+  selector. From the user's shell, `uxnan-cli` reaches every project.
 - On exit 3 or 4, say so and stop; do not try to reach the app another way. The
   surface has no shell, no raw terminal input, no destructive git or filesystem
   entry — by construction, not by convention.
