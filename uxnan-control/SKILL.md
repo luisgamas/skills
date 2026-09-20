@@ -24,11 +24,12 @@ MCP tool `worktree_list` and `uxnan-cli worktree ls` are the same entry.
 
 Load only what the task needs:
 
-- For every entry with its arguments and result, and the capability groups:
-  read `references/catalog.md` (generated from the app's own catalog — it
-  cannot describe something the app does not do).
-- For calling the app **without** the CLI (a script in any language: discovery
-  file, JSON-RPC envelope, headers, error codes): read `references/protocol.md`.
+- For every entry — its CLI form, MCP tool, arguments, result fields, a
+  request and the errors it answers — and for calling the app **without** the
+  CLI (a script in any language: discovery file, JSON-RPC envelope, headers,
+  HTTP statuses, error codes): read `references/catalog.md`. It is generated
+  from the app's own catalog and constants, so it cannot describe something the
+  app does not do.
 - For recipes — show the person a diff, find your own worktree, tell which agents
   are busy, handle a missing app: read `references/workflows.md`.
 
@@ -53,7 +54,7 @@ uxnan-cli file open <path> [--worktree <worktree>]
 uxnan-cli file diff <path> [--worktree <worktree>] [--staged]
 uxnan-cli browser open <url> | navigate <url> | reload | back | forward | status
 uxnan-cli rpc <method> [--params '<json>']      # any catalog entry, raw
-uxnan-cli skills get control [--full]           # this guide / the catalog reference
+uxnan-cli skills get control [--full]           # this guide / the full reference
 Global: --json (stable machine output), --timeout <seconds>
 ```
 

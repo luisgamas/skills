@@ -106,3 +106,7 @@ If you are a step of a run yourself, report through the MCP tool
 uxnan-cli rpc worktree/show --params '{"worktree":"branch:main"}' --json
 uxnan-cli skills get control --full      # the full reference, generated from the catalog
 ```
+
+The result of every entry is documented field by field in
+`references/catalog.md`; read `--json` output against it rather than guessing a
+field's name or whether it may be absent.
