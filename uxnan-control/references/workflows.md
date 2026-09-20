@@ -1,6 +1,6 @@
 # Workflows
 
-Recipes over the `read`, `ui`, `create` and `converse` groups. Every example uses `--json` and reads the
+Recipes over the `read`, `ui`, `create`, `converse` and `orchestrate` groups. Every example uses `--json` and reads the
 exit status; the MCP tool form is the same entry with the same arguments.
 
 ## Check the app before anything else
@@ -99,6 +99,59 @@ uxnan-cli run show <run-id> --json       # steps with kind, target, dependsOn, s
 If you are a step of a run yourself, report through the MCP tool
 `orchestration_report_result` (agentId = your `UXNAN_AGENT_ID`) — the CLI form is
 `uxnan-cli rpc orchestration/reportResult --params '{"agentId":"…","result":"…"}'`.
+
+## Coordinate a run of workers (you are the coordinator)
+
+A driven run is a real run in Uxnan's Runs console: the person watches it and can
+step in. It stays running until you finish it. The loop:
+
+```sh
+R=$(uxnan-cli run create --title "Split the parser work" --json | jq -r .run.id)
+uxnan-cli task create --run $R --title "Lexer"  --prompt-file lexer.md --json
+uxnan-cli task create --run $R --title "Parser" --prompt-file parser.md --depends-on s1 --json
+uxnan-cli task ls --run $R --json                 # s1 ready, s2 pending
+uxnan-cli worker start --run $R --task s1 --agent codex --worktree new --json
+uxnan-cli inbox check --run $R --wait --json      # blocks until a message; heartbeats on stderr
+```
+
+- `worker start` opens a terminal (in your worktree, in a **new worktree on a new
+  branch** with `--worktree new`, or in a given one), launches the agent — any
+  installed one: `claude`, `codex`, `opencode`, … — and types the task in behind a
+  preamble that tells it its task id, its **dispatch id**, to report exactly once,
+  and how to ask you a question. The receipt carries the terminal id: read its
+  screen with `terminal read`, wait on it with `agent wait`.
+- `inbox check` returns `worker_done` (with the result), `worker_failed` (with
+  the error), `question` (answer it) and `status` lines. **Acknowledge** what you
+  handled (`--ack <deliveryId>`), or it comes back next time. A worker's
+  `worker_done` text is its structured report — pass it on with
+  `{{steps.<id>.output}}` in a later task's prompt, or read it here.
+- When a `question` arrives (its `stepId` is the question id):
+  `uxnan-cli answer --run $R --question s3 --answer "keep the old flag"` — the
+  worker waiting on it continues at once. `--reject` tells it not to proceed.
+- A task the run should not wait for: `task update --run $R s2 --status skipped`.
+- A `--headless <agent>` task needs no worker: the engine runs the agent in print
+  mode itself when the task becomes ready and posts `worker_done` with its stdout.
+- End with `run finish $R --outcome success --summary "…"`; running workers keep
+  their terminals.
+
+Only the task's **current dispatch** can complete it: if you start a worker again
+for a task that failed (retry), the old worker's late report is refused.
+
+## Behave as a worker (a coordinator started you)
+
+Your first message is the preamble: your run, task and dispatch ids. Rules:
+
+- Do the task. When done, report **exactly once** with the MCP tool
+  `orchestration_report_result` — `agentId` = your `UXNAN_AGENT_ID`, the `taskId`
+  and `dispatchId` from the preamble, `outcome` (`success`, `failure` or
+  `blocked`) and your result. Without the tools:
+  `uxnan-cli rpc orchestration/reportResult --params '{"agentId":"…","taskId":"s1","dispatchId":"s1.1","outcome":"success","result":"…"}'`.
+- A decision you are not entitled to make is the coordinator's:
+  `question_ask` (or `uxnan-cli ask --question "…" --option yes --option no`)
+  blocks until the answer arrives — do not guess and do not ask a prompt nobody
+  reads. The person can answer instead of the coordinator; you get it the same way.
+- Do not create your own runs or workers unless the task says so; you are one
+  step of someone else's plan.
 
 ## Reach any entry
 

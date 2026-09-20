@@ -1,6 +1,6 @@
 ---
 name: uxnan-control
-description: Operate a running Uxnan Desktop from a shell or from an agent through its control surface — the `uxnan-cli` console client and the MCP tools Uxnan injects into the agents it launches. Use to read the projects, worktrees, terminals, agents and orchestration runs Uxnan holds, to show the person a file or a diff, to bring the window forward, and to drive the integrated browser, with stable `--json` output and documented exit codes. Selectors (`current`, `id:`, `path:`, `branch:`, `name:`) name things without copying ids.
+description: Operate a running Uxnan Desktop from a shell or from an agent through its control surface — the `uxnan-cli` console client and the MCP tools Uxnan injects into the agents it launches. Use to read the projects, worktrees, terminals, agents and orchestration runs Uxnan holds, to show the person a file or a diff, to drive the integrated browser, to give a subtask its own worktree and agent, to talk to a running agent (send, wait, read), and to coordinate a run of workers (tasks, workers in their own worktrees, an inbox, questions) — with stable `--json` output and documented exit codes. Selectors (`current`, `id:`, `path:`, `branch:`, `name:`) name things without copying ids.
 ---
 
 # Uxnan control surface
@@ -31,7 +31,8 @@ Load only what the task needs:
   from the app's own catalog and constants, so it cannot describe something the
   app does not do.
 - For recipes — show the person a diff, find your own worktree, tell which agents
-  are busy, handle a missing app: read `references/workflows.md`.
+  are busy, coordinate a run of workers, behave as a worker, handle a missing
+  app: read `references/workflows.md`.
 
 ## Commands
 
@@ -48,6 +49,13 @@ uxnan-cli agent send --to <terminal> --message-file <file> [--force] [--idempote
 uxnan-cli agent wait --to <terminal> --for idle|waiting|exit [--timeout <seconds>]
 uxnan-cli terminal read <terminal> [--lines <n>]
 uxnan-cli run ls | show <run-id> | start <run-id> [--idempotency-key <key>]
+uxnan-cli run create --title <t> | finish <run-id> --outcome success|failure|blocked [--summary <text>]
+uxnan-cli task create --run <run-id> --title <t> --prompt-file <file> [--depends-on <task>]... [--headless <agent>]
+uxnan-cli task ls --run <run-id> | update --run <run-id> <task> [--status completed|failed|skipped] [--output <text>]
+uxnan-cli worker start --run <run-id> --task <task> --agent <agent> [--worktree current|new|<worktree>]
+uxnan-cli inbox check --run <run-id> [--ack <id>]... [--wait] [--timeout <seconds>]
+uxnan-cli ask --question <text> [--option <o>]...      # from a worker's terminal
+uxnan-cli answer --run <run-id> --question <id> --answer <text> [--reject]
 uxnan-cli automation ls | run <automation-id> [--idempotency-key <key>]
 uxnan-cli app focus
 uxnan-cli file open <path> [--worktree <worktree>]
@@ -111,8 +119,9 @@ A bare word is refused, not guessed: a branch and a project name can collide.
 
 ## Capability groups
 
-`read`, `ui`, `create` (worktrees, terminals, saved runs and automations) and
-`converse` (send a message to an agent, wait for its state, read its screen) ship
-today; `orchestrate` (tasks, inbox, questions) follows. `uxnan-cli status --json`
-says which groups the running app has enabled — check it before assuming an
-entry.
+`read`, `ui`, `create` (worktrees, terminals, saved runs and automations),
+`converse` (send a message to an agent, wait for its state, read its screen) and
+`orchestrate` (drive a run as its coordinator: tasks, workers, an inbox,
+questions — see *Coordinate a run of workers* in `references/workflows.md`).
+`uxnan-cli status --json` says which groups the running app has enabled —
+check it before assuming an entry.
