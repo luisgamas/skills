@@ -110,7 +110,7 @@ R=$(uxnan-cli run create --title "Split the parser work" --json | jq -r .run.id)
 uxnan-cli task create --run $R --title "Lexer"  --prompt-file lexer.md --json
 uxnan-cli task create --run $R --title "Parser" --prompt-file parser.md --depends-on s1 --json
 uxnan-cli task ls --run $R --json                 # s1 ready, s2 pending
-uxnan-cli worker start --run $R --task s1 --agent codex --worktree new --unattended --json
+uxnan-cli worker start --run $R --task s1 --agent codex --worktree new --json   # unattended by default
 uxnan-cli inbox check --run $R --wait --json      # blocks until a message; heartbeats on stderr
 ```
 
@@ -119,13 +119,16 @@ uxnan-cli inbox check --run $R --wait --json      # blocks until a message; hear
   installed one: `claude`, `codex`, `opencode`, … — and types the task in behind a
   preamble that tells it its task id, its **dispatch id**, to report exactly once,
   and how to ask you a question. The receipt carries the terminal id: read its
-  screen with `terminal read`, wait on it with `agent wait`. **Start a worker
-  `--unattended`**: nobody sits at its terminal to click "Allow", so the flag
-  launches the CLI in its reviewed automatic mode (Claude Code
-  `--permission-mode auto`, Codex `--approve-for-me`); the receipt's
-  `unattended` says `applied`, `configured` (the profile already picks a mode)
-  or `unsupported` (no such flag — expect to answer its prompts with
-  `terminal read` + `agent send --force`). Launches are budgeted: with as many
+  screen with `terminal read`, wait on it with `agent wait`. **A worker is
+  unattended by default**: nobody sits at its terminal to click "Allow", so it
+  launches in its CLI's reviewed automatic mode (`claude --permission-mode
+  auto`, `codex --approve-for-me`, …) unless the person switched that off for
+  the agent in Settings → Agents; `--attended` launches it as configured
+  regardless, `--unattended` asks for the mode regardless. The receipt's
+  `unattended` says `applied`, `partial` (only an edits-only tier: shell
+  commands and MCP tools may still prompt), `configured` (the profile already
+  picks a mode) or `unsupported` (no such tier — expect to answer its prompts
+  with `terminal read` + `agent send --force`). Launches are budgeted: with as many
   agents running as the resource policy allows, `worker start` exits 8 (busy,
   with `live` and `cap`) before creating anything — wait for a `worker_done`
   and try again.
