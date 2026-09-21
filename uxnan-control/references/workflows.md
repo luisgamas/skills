@@ -144,7 +144,8 @@ Your first message is the preamble: your run, task and dispatch ids. Rules:
 - Do the task. When done, report **exactly once** with the MCP tool
   `orchestration_report_result` — `agentId` = your `UXNAN_AGENT_ID`, the `taskId`
   and `dispatchId` from the preamble, `outcome` (`success`, `failure` or
-  `blocked`) and your result. Without the tools:
+  `blocked`) and your result. Without the tools, `uxnan-cli` is on the PATH of
+  every terminal Uxnan opens (and named by `$UXNAN_CLI`):
   `uxnan-cli rpc orchestration/reportResult --params '{"agentId":"…","taskId":"s1","dispatchId":"s1.1","outcome":"success","result":"…"}'`.
 - A decision you are not entitled to make is the coordinator's:
   `question_ask` (or `uxnan-cli ask --question "…" --option yes --option no`)
