@@ -52,7 +52,7 @@ uxnan-cli run ls | show <run-id> | start <run-id> [--idempotency-key <key>]
 uxnan-cli run create --title <t> | finish <run-id> --outcome success|failure|blocked [--summary <text>]
 uxnan-cli task create --run <run-id> --title <t> --prompt-file <file> [--depends-on <task>]... [--headless <agent>]
 uxnan-cli task ls --run <run-id> | update --run <run-id> <task> [--status completed|failed|skipped] [--output <text>]
-uxnan-cli worker start --run <run-id> --task <task> --agent <agent> [--worktree current|new|<worktree>]
+uxnan-cli worker start --run <run-id> --task <task> --agent <agent> [--worktree current|new|<worktree>] [--unattended]
 uxnan-cli inbox check --run <run-id> [--ack <id>]... [--wait] [--timeout <seconds>]
 uxnan-cli ask --question <text> [--option <o>]...      # from a worker's terminal
 uxnan-cli answer --run <run-id> --question <id> --answer <text> [--reject]
@@ -95,7 +95,7 @@ A bare word is refused, not guessed: a branch and a project name can collide.
   | 5 | denied: the capability group is switched off, or the token was refused |
   | 6 | timed out |
   | 7 | the selector named nothing |
-  | 8 | the target is busy |
+  | 8 | the target is busy — for a launch, as many agents are running as the resource policy allows (`live`/`cap` in the error); wait for one to finish |
 
 - Never pass long content as an argument: a first message or a message to an
   agent always comes from a file (`--prompt-file`, `--message-file`), capped at
