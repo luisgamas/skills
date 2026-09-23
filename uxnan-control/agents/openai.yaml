@@ -1,4 +1,4 @@
 interface:
   display_name: "Uxnan Control"
   short_description: "Operate a running Uxnan Desktop via uxnan-cli / MCP"
-  default_prompt: "Use $uxnan-control to read or operate the running Uxnan Desktop: projects, worktrees, terminals, agents, runs, files, diffs and the integrated browser."
+  default_prompt: "Use $uxnan-control to read or operate the running Uxnan Desktop: projects, worktrees, terminals, agents, runs, files, diffs, and reading and testing pages in the integrated browser."
