@@ -8,10 +8,12 @@ description: Operate a running Uxnan Desktop from a shell or from an agent throu
 ## Purpose
 
 Use this skill when **Uxnan Desktop** is running on the machine and you need to
-read or operate it: which projects and worktrees it holds, which terminals are
-open and which agents run in them (and their live state), what an orchestration
-run captured; or to show the person a file or a diff, focus the window, or
-open, read and test a page in the integrated browser.
+read or operate it: which projects and worktrees it holds, which remote machines
+they live on, which terminals are open and which agents run in them (and their
+live state), what an orchestration run captured, what a saved automation would
+actually do; or to show the person a file or a diff — in Uxnan or in their own
+editor — draft an automation for them to save, focus the window, or open, read
+and test a page in the integrated browser.
 
 If Uxnan launched you, you already have these entries as **MCP tools**
 (`uxnan_status`, `project_list`, `worktree_show`, `terminal_list`, `file_diff`,
@@ -49,6 +51,7 @@ uxnan-cli agent send --to <terminal> --message-file <file> [--force] [--idempote
 uxnan-cli agent wait --to <terminal> --for idle|waiting|exit [--timeout <seconds>]
 uxnan-cli terminal read <terminal> [--lines <n>]
 uxnan-cli run ls | show <run-id> | start <run-id> [--idempotency-key <key>]
+uxnan-cli host ls | show <host-id> | connect <host-id> [--idempotency-key <key>]
 uxnan-cli run create --title <t> | finish <run-id> --outcome success|failure|blocked [--summary <text>]
 uxnan-cli task create --run <run-id> --title <t> --prompt-file <file> [--depends-on <task>]... [--headless <agent>]
 uxnan-cli task ls --run <run-id> | update --run <run-id> <task> [--status completed|failed|skipped] [--output <text>]
@@ -56,9 +59,10 @@ uxnan-cli worker start --run <run-id> --task <task> --agent <agent> [--worktree 
 uxnan-cli inbox check --run <run-id> [--ack <id>]... [--wait] [--timeout <seconds>]
 uxnan-cli ask --question <text> [--option <o>]...      # from a worker's terminal
 uxnan-cli answer --run <run-id> --question <id> --answer <text> [--reject]
-uxnan-cli automation ls | run <automation-id> [--idempotency-key <key>]
+uxnan-cli automation ls | show <automation-id> | run <automation-id> [--idempotency-key <key>]
+uxnan-cli automation propose --spec-file <draft.json>   # the person reviews and saves it
 uxnan-cli app focus
-uxnan-cli file open <path> [--worktree <worktree>]
+uxnan-cli file open <path> [--worktree <worktree>] [--with <editor>]
 uxnan-cli file diff <path> [--worktree <worktree>] [--staged]
 uxnan-cli browser open <url> | navigate <url> | reload | back | forward | status
 uxnan-cli browser snapshot                                # the page as an outline; refs on interactive elements
@@ -139,7 +143,10 @@ A bare word is refused, not guessed: a branch and a project name can collide.
 
 ## Capability groups
 
-`read`, `ui`, `create` (worktrees, terminals, saved runs and automations),
+`read` (including the machines projects live on, and the agent budget `status`
+reports), `ui` (show the person something — a file in Uxnan or in their own
+editor, a diff, a draft automation for them to decide on), `create` (worktrees,
+terminals, saved runs and automations, and connecting a registered host),
 `converse` (send a message to an agent, wait for its state, read its screen) and
 `orchestrate` (drive a run as its coordinator: tasks, workers, an inbox,
 questions — see *Coordinate a run of workers* in `references/workflows.md`).
