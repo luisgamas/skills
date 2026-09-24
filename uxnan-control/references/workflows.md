@@ -55,15 +55,29 @@ A relative `path` needs a worktree (`current` by default); an absolute path must
 lie inside a registered worktree — anything else is exit 2, and a file that does
 not exist is exit 7.
 
-## Preview what you built
+## Preview and test what you built
 
 ```sh
-uxnan-cli browser status --json          # is a page open, where, how opens are routed
-uxnan-cli browser open http://localhost:3000
+uxnan-cli browser status --json          # your workspace's page: open? which URL? visible?
+uxnan-cli browser open http://localhost:3000 --json   # answers once the page has loaded
+uxnan-cli browser snapshot               # what rendered, with a ref on every control
+uxnan-cli browser type k3p9:e7 "ada@example.com"
+uxnan-cli browser click k3p9:e9 --snapshot            # act, and read the new page in one call
+uxnan-cli browser console --level error  # did the app log anything?
+uxnan-cli browser screenshot --out shot.png           # when the layout itself matters
 uxnan-cli browser reload                 # after changing code
 ```
 
-Opens follow the person's link policy (in-app, system browser, or ask).
+The loop is **snapshot → act by ref → read the answer**: every action returns
+the page after it (and waits for a navigation it caused), and `--snapshot`
+returns the new outline too. Take a new snapshot after anything that navigated —
+old refs are refused. Use `browser wait "<text>"` for content that appears
+after a request instead of sleeping.
+
+Opens follow the person's link policy (in-app, system browser, or ask); with
+`routed: "external"` or `"ask"` there is no in-app page to act on. A submit (or
+a "Delete…", "Pay…", "Sign in…" button) pauses for the person's approval — if
+the call ends with exit 9, say what you were doing and wait for them.
 
 ## Talk to a running agent: send, wait, read
 

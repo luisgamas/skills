@@ -1,6 +1,6 @@
 ---
 name: uxnan-control
-description: Operate a running Uxnan Desktop from a shell or from an agent through its control surface — the `uxnan-cli` console client and the MCP tools Uxnan injects into the agents it launches. Use to read the projects, worktrees, terminals, agents and orchestration runs Uxnan holds, to show the person a file or a diff, to drive the integrated browser, to give a subtask its own worktree and agent, to talk to a running agent (send, wait, read), and to coordinate a run of workers (tasks, workers in their own worktrees, an inbox, questions) — with stable `--json` output and documented exit codes. Selectors (`current`, `id:`, `path:`, `branch:`, `name:`) name things without copying ids.
+description: Operate a running Uxnan Desktop from a shell or from an agent through its control surface — the `uxnan-cli` console client and the MCP tools Uxnan injects into the agents it launches. Use to read the projects, worktrees, terminals, agents and orchestration runs Uxnan holds, to show the person a file or a diff, to open, read and use pages in the integrated browser (outline with element refs, click, type, press, scroll, screenshot, console — under the person's approval policy), to give a subtask its own worktree and agent, to talk to a running agent (send, wait, read), and to coordinate a run of workers (tasks, workers in their own worktrees, an inbox, questions) — with stable `--json` output and documented exit codes. Selectors (`current`, `id:`, `path:`, `branch:`, `name:`) name things without copying ids.
 ---
 
 # Uxnan control surface
@@ -11,7 +11,7 @@ Use this skill when **Uxnan Desktop** is running on the machine and you need to
 read or operate it: which projects and worktrees it holds, which terminals are
 open and which agents run in them (and their live state), what an orchestration
 run captured; or to show the person a file or a diff, focus the window, or
-preview a page in the integrated browser.
+open, read and test a page in the integrated browser.
 
 If Uxnan launched you, you already have these entries as **MCP tools**
 (`uxnan_status`, `project_list`, `worktree_show`, `terminal_list`, `file_diff`,
@@ -61,6 +61,10 @@ uxnan-cli app focus
 uxnan-cli file open <path> [--worktree <worktree>]
 uxnan-cli file diff <path> [--worktree <worktree>] [--staged]
 uxnan-cli browser open <url> | navigate <url> | reload | back | forward | status
+uxnan-cli browser snapshot                                # the page as an outline; refs on interactive elements
+uxnan-cli browser click <ref> [--snapshot] | type <ref> <text> [--append] [--snapshot]
+uxnan-cli browser press <key> [--shift] | scroll [--direction down|up|left|right] [--amount <n>] [--ref <ref>]
+uxnan-cli browser screenshot --out <file.png> | console [--since <n>] [--level all|warn|error] | wait <text> [--for <s>]
 uxnan-cli rpc <method> [--params '<json>']      # any catalog entry, raw
 uxnan-cli skills get control [--full]           # this guide / the full reference
 Global: --json (stable machine output), --timeout <seconds>
@@ -96,6 +100,7 @@ A bare word is refused, not guessed: a branch and a project name can collide.
   | 6 | timed out |
   | 7 | the selector named nothing |
   | 8 | the target is busy — for a launch, as many agents are running as the resource policy allows (`live`/`cap` in the error); wait for one to finish |
+  | 9 | refused by a safety policy or by the person — a browser page action that is never allowed, a site the person has not allowed, or an approval declined or not answered in time |
 
 - Never pass long content as an argument: a first message or a message to an
   agent always comes from a file (`--prompt-file`, `--message-file`), capped at
@@ -116,6 +121,21 @@ A bare word is refused, not guessed: a branch and a project name can collide.
   entry — by construction, not by convention.
 - The token is never printed and never needs to be handled: the CLI finds it
   (the environment inside a Uxnan terminal; a private `control.json` elsewhere).
+- **The browser is per workspace.** Your browser calls act on the page of the
+  workspace your terminal belongs to (from another shell: the workspace on
+  screen). When that is not the one the person is looking at, the page loads
+  hidden and works the same — `visible: false` in the answer.
+- **Act on a page only by the `ref` a fresh `browser snapshot` gave you.** A ref
+  names an element of one document: after a navigation or reload it is refused
+  (exit 2, "take a new snapshot"). An element that is hidden, disabled or covered
+  is refused with what covers it.
+- **Respect the page policy; do not work around it.** Local pages (localhost,
+  loopback, a forwarded port — your dev server) are yours to read and use.
+  Submitting a form or anything that reads as deleting, paying, publishing or
+  signing in waits for the person (up to 45 s); a site outside the machine is
+  refused unless the person allowed it in Settings. Typing into password or file
+  fields is always refused — ask the person. On exit 9, tell the person what you
+  wanted to do and why, and try again only if they say so.
 
 ## Capability groups
 
