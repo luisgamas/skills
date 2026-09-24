@@ -47,6 +47,7 @@ from output.
 uxnan-cli file diff src/app.ts --worktree branch:feat/x      # the Changes view of that file
 uxnan-cli file diff src/app.ts --worktree current --staged   # the staged diff instead
 uxnan-cli file open README.md --worktree path:/home/dev/app  # the editor tab
+uxnan-cli file open src/app.ts --with zed                    # their own editor instead
 uxnan-cli terminal reveal id:<terminalId>                    # bring a tab forward
 uxnan-cli app focus                                          # the window itself
 ```
@@ -54,6 +55,11 @@ uxnan-cli app focus                                          # the window itself
 A relative `path` needs a worktree (`current` by default); an absolute path must
 lie inside a registered worktree — anything else is exit 2, and a file that does
 not exist is exit 7.
+
+`--with` names **one of the editors this machine offers** — the ones Uxnan
+detected plus the ones the person added under Settings → Open with — by name or
+by command. It is not a command to run: a name that matches none of them is exit
+7, and the error lists the ones that do.
 
 ## Preview and test what you built
 
@@ -179,6 +185,70 @@ Your first message is the preamble: your run, task and dispatch ids. Rules:
   reads. The person can answer instead of the coordinator; you get it the same way.
 - Do not create your own runs or workers unless the task says so; you are one
   step of someone else's plan.
+
+## The machine a project lives on
+
+A project whose `target` is `ssh:<hostId>` is not on this computer: its
+worktrees, its git and its terminals all go through one SSH session Uxnan holds.
+When work on it stops answering, ask about the machine before you retry
+anything.
+
+```sh
+uxnan-cli host ls                 # every host, connected or not, and its channels
+uxnan-cli host show <host-id>     # plus the projects and terminals on it
+uxnan-cli host connect <host-id>  # open a session on one that has none
+```
+
+`host ls` reports the **live session**, not the settings: `connected`, the shell
+the host starts, and how many channels are in use against the limit that host
+turned out to enforce. `connect` never takes a credential — a host that wants a
+password or a key passphrase, or whose host key is unknown or has changed,
+answers with that status and stops. Say so and let the person finish it in
+Settings → Hosts; there is no entry that trusts a key or adds a host.
+
+Hosts are the person's to see: from a token Uxnan gave you, you reach the host
+**your own project** lives on and no other, and a token scoped to a project on
+this machine is refused with exit 5.
+
+## Propose an automation (never create one)
+
+When the person wants recurring unattended work, you draft it and they decide.
+There is no entry that creates, edits, enables or schedules an automation: one
+that could schedule itself would outlive the session that made it.
+
+```sh
+cat > draft.json <<'JSON'
+{
+  "name": "Nightly lint",
+  "workingDir": "/home/dev/app",
+  "schedule": { "kind": "dailyAt", "hour": 3, "minute": 0 },
+  "steps": [
+    { "id": "s1", "title": "Lint", "agent": "claude",
+      "prompt": "Run the linter and fix what it reports.", "autonomous": true },
+    { "id": "s2", "title": "Note", "agent": "claude", "dependsOn": ["s1"],
+      "prompt": "Summarise what changed: {{steps.s1.output}}" }
+  ]
+}
+JSON
+uxnan-cli automation propose --spec-file draft.json
+```
+
+Uxnan opens its automations editor filled in with this, under a notice saying
+the draft came from you. **Nothing is created**: the person reads it, changes
+what they want and presses Save — and it is saved *paused*, so it starts running
+only when they turn it on. Every step must name an agent installed on that
+machine (the error lists them), a launch token may only propose work in a folder
+of its own project (exit 5 otherwise), and the cadence defaults to daily at
+09:00 when you leave it out.
+
+To act on one that already exists, read it first — the list does not say what a
+run would do:
+
+```sh
+uxnan-cli automation ls
+uxnan-cli automation show <automation-id>   # prompts, policy, precondition
+uxnan-cli automation run <automation-id>    # a manual run of the saved definition
+```
 
 ## Reach any entry
 
