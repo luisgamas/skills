@@ -1,6 +1,6 @@
 ---
 name: uxnan-control
-description: Operate a running Uxnan Desktop from a shell or from an agent through its control surface — the `uxnan-cli` console client and the MCP tools Uxnan injects into the agents it launches. Use to read the projects, worktrees, terminals, agents and orchestration runs Uxnan holds, to show the person a file or a diff, to open, read and use pages in the integrated browser (outline with element refs, click, type, press, scroll, screenshot, console — under the person's approval policy), to give a subtask its own worktree and agent, to talk to a running agent (send, wait, read), and to coordinate a run of workers (tasks, workers in their own worktrees, an inbox, questions) — with stable `--json` output and documented exit codes. Selectors (`current`, `id:`, `path:`, `branch:`, `name:`) name things without copying ids.
+description: Operate a running Uxnan Desktop from a shell or from an agent through its control surface — the `uxnan-cli` console client and the MCP tools Uxnan injects into the agents it launches. Use to read the projects, worktrees, terminals, agents and orchestration runs Uxnan holds, to show the person a file or a diff, to open, read and use pages in the integrated browser (outline with element refs, click, type, press, scroll, screenshot, console — under the person's approval policy), to give a subtask its own worktree and agent, to talk to a running agent (send, wait, read) or to one of the chats the Uxnan bridge drives (list, open, send — the same conversations the phone shows), and to coordinate a run of workers (tasks, workers in their own worktrees, an inbox, questions) — with stable `--json` output and documented exit codes. Selectors (`current`, `id:`, `path:`, `branch:`, `name:`) name things without copying ids.
 ---
 
 # Uxnan control surface
@@ -49,6 +49,9 @@ uxnan-cli terminal create --worktree <worktree> [--title <t>] [--agent <agent>] 
 uxnan-cli agent ls
 uxnan-cli agent send --to <terminal> --message-file <file> [--force] [--idempotency-key <key>]
 uxnan-cli agent wait --to <terminal> --for idle|waiting|exit [--timeout <seconds>]
+uxnan-cli chat ls [--worktree <worktree>] [--archived]
+uxnan-cli chat open <chat>
+uxnan-cli chat send --to <chat> --message-file <file> [--idempotency-key <key>]
 uxnan-cli terminal read <terminal> [--lines <n>]
 uxnan-cli run ls | show <run-id> | start <run-id> [--idempotency-key <key>]
 uxnan-cli host ls | show <host-id> | connect <host-id> [--idempotency-key <key>]
@@ -147,7 +150,8 @@ A bare word is refused, not guessed: a branch and a project name can collide.
 reports), `ui` (show the person something — a file in Uxnan or in their own
 editor, a diff, a draft automation for them to decide on), `create` (worktrees,
 terminals, saved runs and automations, and connecting a registered host),
-`converse` (send a message to an agent, wait for its state, read its screen) and
+`converse` (send a message to an agent, wait for its state, read its screen, or
+send a message to a chat) and
 `orchestrate` (drive a run as its coordinator: tasks, workers, an inbox,
 questions — see *Coordinate a run of workers* in `references/workflows.md`).
 `uxnan-cli status --json` says which groups the running app has enabled —

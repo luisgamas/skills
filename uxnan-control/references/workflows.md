@@ -99,6 +99,21 @@ something (answer it with another `send`); `--for exit` when its terminal is
 gone. Exit 6 is the timeout; exit 5 on `read` means the project switched
 reads off.
 
+## Talk to a chat (a bridge conversation)
+
+Chats are the conversations the Uxnan bridge drives — shown in Uxnan's chat
+tabs and on the phone alike. They need Uxnan connected to the bridge
+(Settings → Bridge & mobile); otherwise these calls exit 3 (*unavailable*).
+
+```sh
+uxnan-cli chat ls --worktree current --json                         # id, title, agent, model, folder, working|idle
+uxnan-cli chat send --to id:<chatId> --message-file next-step.md    # queued behind a running turn; every client sees it
+uxnan-cli chat open id:<chatId>                                     # show it to the person in its tab
+```
+
+A chat outside your project is *scope denied* (exit 5). `chat ls` says
+`working` while a turn runs; poll it to learn when the chat is idle again.
+
 ## Give a subtask its own space
 
 ```sh

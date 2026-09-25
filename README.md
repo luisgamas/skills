@@ -85,7 +85,7 @@ npx skills add https://github.com/luisgamas/skills/tree/main/uxnan-control
 
 | Skill | Description |
 |-------|-------------|
-| **uxnan-control** | Operate a running Uxnan Desktop from a shell or an agent: `uxnan-cli` and the MCP tools it injects into the agents it launches — projects, worktrees, the remote machines they live on, terminals, agents, runs, saved automations (read one, run it, or draft one for the person to save), files and diffs (in Uxnan or in their own editor), the integrated browser (read and test pages by element ref, under the person's approval policy), a subtask's own worktree and agent, send/wait/read with a running agent, and coordinating a run of workers (tasks, inbox, questions) — with stable `--json` output, selectors and documented exit codes. Generated from the app's own catalog. |
+| **uxnan-control** | Operate a running Uxnan Desktop from a shell or an agent: `uxnan-cli` and the MCP tools it injects into the agents it launches — projects, worktrees, the remote machines they live on, terminals, agents, runs, saved automations (read one, run it, or draft one for the person to save), files and diffs (in Uxnan or in their own editor), the integrated browser (read and test pages by element ref, under the person's approval policy), a subtask's own worktree and agent, send/wait/read with a running agent, the bridge's chats (list, open, send), and coordinating a run of workers (tasks, inbox, questions) — with stable `--json` output, selectors and documented exit codes. Generated from the app's own catalog. |
 
 ## Usage
 
