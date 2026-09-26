@@ -99,6 +99,44 @@ something (answer it with another `send`); `--for exit` when its terminal is
 gone. Exit 6 is the timeout; exit 5 on `read` means the project switched
 reads off.
 
+## Talk to a chat (a bridge conversation)
+
+Chats are the conversations the Uxnan bridge drives — shown in Uxnan's chat
+tabs and on the phone alike. They need Uxnan connected to the bridge
+(Settings → Bridge & mobile); otherwise these calls exit 3 (*unavailable*).
+
+```sh
+uxnan-cli chat ls --worktree current --json                         # id, title, agent, model, folder, working|idle
+uxnan-cli chat send --to id:<chatId> --message-file next-step.md    # queued behind a running turn; every client sees it
+uxnan-cli chat wait id:<chatId> --for idle                          # until its turn ends (heartbeats on stderr)
+uxnan-cli chat read id:<chatId> --turns 1 --json                    # the message, the answer, the steps it took
+uxnan-cli chat open id:<chatId>                                     # show it to the person in its tab
+```
+
+A chat outside your project is *scope denied* (exit 5). `chat wait --for
+waiting` returns when its turn stopped on an approval or a question — the person
+answers it in the chat tab or on the phone.
+
+## Hand a task to another agent as a chat
+
+A chat is the way to put a second agent to work when you need its **answer**,
+not its screen: it shows in a tab and on the phone, and `chat read` returns what
+it said and did — no terminal scraping. Start it in the worktree it should work
+in, with the agent the person wants (`claude`, `codex`, `opencode`, `pi`, `agy`,
+`zero`, `grok`):
+
+```sh
+uxnan-cli chat start --worktree current --agent codex \
+  --message-file review-request.md --idempotency-key review-1 --json   # → chat: <id>
+uxnan-cli chat wait id:<id> --for idle --timeout 1800                  # until it answers
+uxnan-cli chat read id:<id> --json                                     # its answer and steps
+uxnan-cli chat send --to id:<id> --message-file follow-up.md           # carry on the same conversation
+```
+
+The chat's agent acts without asking, as a chat started in the tab does; give
+it a worktree of its own (`worktree create`) when its changes must not touch
+yours.
+
 ## Give a subtask its own space
 
 ```sh
