@@ -240,9 +240,12 @@ uxnan-cli host connect <host-id>  # open a session on one that has none
 `host ls` reports the **live session**, not the settings: `connected`, the shell
 the host starts, and how many channels are in use against the limit that host
 turned out to enforce. `connect` never takes a credential — a host that wants a
-password or a key passphrase, or whose host key is unknown or has changed,
-answers with that status and stops. Say so and let the person finish it in
-Settings → Hosts; there is no entry that trusts a key or adds a host.
+password or a key passphrase the person has not given in this session of the
+app, a second factor (`needsAnswers`), or whose host key is unknown or has
+changed, answers with that status and stops. Any of those can be about a
+bastion on the way rather than the host itself. Say so and let the person
+finish it in Settings → Hosts; there is no entry that trusts a key or adds a
+host.
 
 Hosts are the person's to see: from a token Uxnan gave you, you reach the host
 **your own project** lives on and no other, and a token scoped to a project on
