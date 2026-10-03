@@ -233,13 +233,18 @@ anything.
 
 ```sh
 uxnan-cli host ls                 # every host, connected or not, and its channels
-uxnan-cli host show <host-id>     # plus the projects and terminals on it
+uxnan-cli host show <host-id>     # plus its projects, its tabs and every terminal its engine holds
 uxnan-cli host connect <host-id>  # open a session on one that has none
 ```
 
 `host ls` reports the **live session**, not the settings: `connected`, the shell
 the host starts, and how many channels are in use against the limit that host
-turned out to enforce. `connect` never takes a credential — a host that wants a
+turned out to enforce — and, on a host running the host engine, that engine
+(`engine.version`, `engine.os`) and the link's round trip (`latencyMs`). No
+`engine` means its terminals are plain channels that die with the connection and
+it has no files, git or search. `host show` adds `engineSessions`: every terminal
+that engine holds, with `tab: null` for one no tab shows — left by an earlier run
+of the app, and still running there. `connect` never takes a credential — a host that wants a
 password or a key passphrase the person has not given in this session of the
 app, a second factor (`needsAnswers`), or whose host key is unknown or has
 changed, answers with that status and stops. Any of those can be about a
