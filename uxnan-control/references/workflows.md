@@ -252,6 +252,13 @@ bastion on the way rather than the host itself. Say so and let the person
 finish it in Settings → Hosts; there is no entry that trusts a key or adds a
 host.
 
+`carrier` says what connects to it: the built-in client, or the machine's own
+`ssh` (`systemSsh` names why — Kerberos, a security key, the person's choice).
+Through the system `ssh` everything works the same, but nothing can be typed in:
+`systemSshFailed` carries OpenSSH's own sentence (a host key it does not know, a
+login it refused). Pass it on; the person settles it in a terminal or switches
+the host to the built-in client on its page.
+
 Hosts are the person's to see: from a token Uxnan gave you, you reach the host
 **your own project** lives on and no other, and a token scoped to a project on
 this machine is refused with exit 5.
