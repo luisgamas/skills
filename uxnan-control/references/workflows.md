@@ -287,6 +287,12 @@ machine (the error lists them), a launch token may only propose work in a folder
 of its own project (exit 5 otherwise), and the cadence defaults to daily at
 09:00 when you leave it out.
 
+When your project lives on a host, the folder is a folder **of that host** and
+the draft is for that machine: its steps run there, with the agents installed
+there, while Uxnan is open and connected to it (`automation show` reports the
+`target`). Only the control token names a machine itself (`"target":
+"ssh:<hostId>"`); a token Uxnan gave you always means your own project's.
+
 To act on one that already exists, read it first — the list does not say what a
 run would do:
 
