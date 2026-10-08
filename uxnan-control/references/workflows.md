@@ -133,6 +133,11 @@ uxnan-cli chat read id:<id> --json                                     # its ans
 uxnan-cli chat send --to id:<id> --message-file follow-up.md           # carry on the same conversation
 ```
 
+A long answer comes back as its last 16 KiB. When `answerLength` is larger than
+what you got, read the rest from the start: `chat read id:<id> --answer-from 0
+--json`, then `--answer-from 16384`, and so on. A turn that failed before
+answering says why in `error`.
+
 The chat's agent acts without asking, as a chat started in the tab does; give
 it a worktree of its own (`worktree create`) when its changes must not touch
 yours.

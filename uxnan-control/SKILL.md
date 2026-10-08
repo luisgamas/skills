@@ -54,7 +54,7 @@ uxnan-cli chat open <chat>
 uxnan-cli chat send --to <chat> --message-file <file> [--idempotency-key <key>]
 uxnan-cli chat start --agent <agent> [--worktree <worktree>] [--model <model>] [--title <t>]
                      [--message-file <file>] [--no-open] [--idempotency-key <key>]
-uxnan-cli chat read <chat> [--turns <n>]
+uxnan-cli chat read <chat> [--turns <n>] [--answer-from <byte>]
 uxnan-cli chat wait <chat> [--for idle|waiting] [--timeout <seconds>]
 uxnan-cli terminal read <terminal> [--lines <n>]
 uxnan-cli run ls | show <run-id> | start <run-id> [--idempotency-key <key>]
@@ -76,6 +76,7 @@ uxnan-cli browser snapshot                                # the page as an outli
 uxnan-cli browser click <ref> [--snapshot] | type <ref> <text> [--append] [--snapshot]
 uxnan-cli browser press <key> [--shift] | scroll [--direction down|up|left|right] [--amount <n>] [--ref <ref>]
 uxnan-cli browser screenshot --out <file.png> | console [--since <n>] [--level all|warn|error] | wait <text> [--for <s>]
+uxnan-cli view render <file.html> [--width <px>] --out <file.png>   # how an agent's view page renders (screenshot, console, height)
 uxnan-cli rpc <method> [--params '<json>']      # any catalog entry, raw
 uxnan-cli skills get control [--full]           # this guide / the full reference
 Global: --json (stable machine output), --timeout <seconds>
