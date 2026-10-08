@@ -54,7 +54,7 @@ uxnan-cli chat open <chat>
 uxnan-cli chat send --to <chat> --message-file <file> [--idempotency-key <key>]
 uxnan-cli chat start --agent <agent> [--worktree <worktree>] [--model <model>] [--title <t>]
                      [--message-file <file>] [--no-open] [--idempotency-key <key>]
-uxnan-cli chat read <chat> [--turns <n>]
+uxnan-cli chat read <chat> [--turns <n>] [--answer-from <byte>]
 uxnan-cli chat wait <chat> [--for idle|waiting] [--timeout <seconds>]
 uxnan-cli terminal read <terminal> [--lines <n>]
 uxnan-cli run ls | show <run-id> | start <run-id> [--idempotency-key <key>]
