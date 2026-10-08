@@ -76,6 +76,7 @@ uxnan-cli browser snapshot                                # the page as an outli
 uxnan-cli browser click <ref> [--snapshot] | type <ref> <text> [--append] [--snapshot]
 uxnan-cli browser press <key> [--shift] | scroll [--direction down|up|left|right] [--amount <n>] [--ref <ref>]
 uxnan-cli browser screenshot --out <file.png> | console [--since <n>] [--level all|warn|error] | wait <text> [--for <s>]
+uxnan-cli view render <file.html> [--width <px>] --out <file.png>   # how an agent's view page renders (screenshot, console, height)
 uxnan-cli rpc <method> [--params '<json>']      # any catalog entry, raw
 uxnan-cli skills get control [--full]           # this guide / the full reference
 Global: --json (stable machine output), --timeout <seconds>
