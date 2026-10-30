@@ -142,6 +142,37 @@ The chat's agent acts without asking, as a chat started in the tab does; give
 it a worktree of its own (`worktree create`) when its changes must not touch
 yours.
 
+## Hand a chat to another agent (with its context)
+
+When a conversation should go on with a **different** agent — or as a copy with
+the same one — do not paste its history into a new chat by hand. A chat never
+changes agent and no CLI can continue another's session, so the bridge makes a
+**new** chat whose first message carries the source's context, prepared from
+the history it holds (a budgeted selection: the opening request, the newest
+exchanges whole, older ones shortened — never an invented summary). The source
+stays as it is and names its continuation, in Uxnan and on the phone.
+
+```sh
+uxnan-cli chat search "retry policy" --json                            # find it by what was said
+uxnan-cli chat forward id:<chatId> --agent claude \
+  --message-file brief.md --idempotency-key handoff-1 --json            # → chat: <newId>, status
+uxnan-cli chat wait id:<newId> --for idle                              # the new agent answers
+uxnan-cli chat read id:<newId> --json                                  # it starts from the context
+uxnan-cli chat fork id:<chatId> --json                                 # same agent, history copied
+uxnan-cli chat start --agent codex --worktree branch:feat/x \
+  --continue-from id:<chatId> --message-file brief.md                  # another worktree, from that context
+```
+
+`--strategy reference` carries only a pointer (title, opening request, last
+exchange) for an agent that should start fresh; `--strategy fork` copies the
+whole history into the new chat too. Write the brief (the goal and what to do
+next) in `--message-file`: it goes whole, after the context. The receipt's
+`status` is the bridge's proof, not a promise — `pending` until a message runs,
+`delivered` only once the new agent answered; `unverifiable` means the bridge
+restarted mid-turn and the next message carries the context again. Repeating
+the call with the same `--idempotency-key` returns the same chat and sends
+nothing twice.
+
 ## Give a subtask its own space
 
 ```sh

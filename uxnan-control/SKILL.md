@@ -1,6 +1,6 @@
 ---
 name: uxnan-control
-description: Operate a running Uxnan Desktop from a shell or from an agent through its control surface — the `uxnan-cli` console client and the MCP tools Uxnan injects into the agents it launches. Use to read the projects, worktrees, terminals, agents and orchestration runs Uxnan holds, to show the person a file or a diff, to open, read and use pages in the integrated browser (outline with element refs, click, type, press, scroll, screenshot, console — under the person's approval policy), to give a subtask its own worktree and agent, to talk to a running agent (send, wait, read) or to one of the chats the Uxnan bridge drives (start one with any bridge agent in a worktree, list, open, send, wait for it and read what it answered — the same conversations the phone shows), and to coordinate a run of workers (tasks, workers in their own worktrees, an inbox, questions) — with stable `--json` output and documented exit codes. Selectors (`current`, `id:`, `path:`, `branch:`, `name:`) name things without copying ids.
+description: Operate a running Uxnan Desktop from a shell or from an agent through its control surface — the `uxnan-cli` console client and the MCP tools Uxnan injects into the agents it launches. Use to read the projects, worktrees, terminals, agents and orchestration runs Uxnan holds, to show the person a file or a diff, to open, read and use pages in the integrated browser (outline with element refs, click, type, press, scroll, screenshot, console — under the person's approval policy), to give a subtask its own worktree and agent, to talk to a running agent (send, wait, read) or to one of the chats the Uxnan bridge drives (start one with any bridge agent in a worktree, list, search by title and by what was said, open, send, wait for it and read what it answered, fork one, or hand one to another agent with its context carried over — the same conversations the phone shows), and to coordinate a run of workers (tasks, workers in their own worktrees, an inbox, questions) — with stable `--json` output and documented exit codes. Selectors (`current`, `id:`, `path:`, `branch:`, `name:`) name things without copying ids.
 ---
 
 # Uxnan control surface
@@ -50,10 +50,15 @@ uxnan-cli agent ls
 uxnan-cli agent send --to <terminal> --message-file <file> [--force] [--idempotency-key <key>]
 uxnan-cli agent wait --to <terminal> --for idle|waiting|exit [--timeout <seconds>]
 uxnan-cli chat ls [--worktree <worktree>] [--archived]
+uxnan-cli chat search <query> [--worktree <worktree> | --all] [--archived] [--limit <n>] [--cursor <c>]
 uxnan-cli chat open <chat>
 uxnan-cli chat send --to <chat> --message-file <file> [--idempotency-key <key>]
 uxnan-cli chat start --agent <agent> [--worktree <worktree>] [--model <model>] [--title <t>]
-                     [--message-file <file>] [--no-open] [--idempotency-key <key>]
+                     [--message-file <file>] [--no-open] [--continue-from <chat> [--strategy <s>]]
+                     [--idempotency-key <key>]
+uxnan-cli chat fork <chat> [--no-open] [--idempotency-key <key>]
+uxnan-cli chat forward <chat> --agent <agent> [--model <model>] [--strategy selection|reference|fork]
+                       [--message-file <file> | --message <text>] [--no-open] [--idempotency-key <key>]
 uxnan-cli chat read <chat> [--turns <n>] [--answer-from <byte>]
 uxnan-cli chat wait <chat> [--for idle|waiting] [--timeout <seconds>]
 uxnan-cli terminal read <terminal> [--lines <n>]
@@ -151,10 +156,12 @@ A bare word is refused, not guessed: a branch and a project name can collide.
 
 ## Capability groups
 
-`read` (including the machines projects live on, and the agent budget `status`
-reports), `ui` (show the person something — a file in Uxnan or in their own
+`read` (including the machines projects live on, the agent budget `status`
+reports, and searching the chats by what was said), `ui` (show the person something — a file in Uxnan or in their own
 editor, a diff, a draft automation for them to decide on), `create` (worktrees,
-terminals, chats, saved runs and automations, and connecting a registered host),
+terminals, chats — including a fork, or a hand-off of a chat to another agent
+with its context (see *Hand a chat to another agent* in `references/workflows.md`)
+— saved runs and automations, and connecting a registered host),
 `converse` (send a message to an agent, wait for its state, read its screen, or
 send a message to a chat, wait for it and read its answer) and
 `orchestrate` (drive a run as its coordinator: tasks, workers, an inbox,
